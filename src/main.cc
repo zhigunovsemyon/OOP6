@@ -1,11 +1,10 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_pixels.h>
 #include <iostream>
 #include <string_view>
 
 class Program {
 private:
-	static constexpr SDL_Colour bgcolour_{0xFF, 0x70, 0xA9, 0x70};
+	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
 	static constexpr SDL_Point winsize_{640, 480};
 	static constexpr int frametime_{10};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
@@ -68,7 +67,7 @@ void EventHandler(bool * runFlag, SDL_Event * ev)
 /*Функция рисования фона рисовальщика rend, цветом r g b*/
 bool DrawBackground(SDL_Renderer * rend, SDL_Colour const & col) noexcept
 {
-	if (SDL_SetRenderDrawColor(rend, col.r, col.g, col.b, 0xFF) ||
+	if (SDL_SetRenderDrawColor(rend, col.r, col.g, col.b, col.a) ||
 	    SDL_RenderClear(rend)) {
 		return true;
 	}
