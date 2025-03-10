@@ -1,5 +1,11 @@
 #pragma once
+
+#include "message.h"
+#include "obj.h"
+
 #include <SDL2/SDL.h>
+#include <deque>
+#include <new>
 #include <string_view>
 
 class Program {
@@ -12,9 +18,17 @@ private:
 	SDL_Window * win_{};
 	SDL_Renderer * rend_{};
 	SDL_Event event_{};
-	static bool running_;
+	// static bool running_;
+	static Program * inst_;
+
+	std::deque<Message *> msg_list_{};
+	// std::deque<Object*> obj_list_{};
+
+	Program(); /*Конструктор программы. Выбрасывает исключения*/
 
 public:
+	~Program(); /*Деструктор программы*/
+
 	class Error {
 	private:
 		bool fail_;
@@ -22,7 +36,8 @@ public:
 
 	public:
 		enum class type {
-			SDL = 1
+			SDL = 1,
+			BAD_ALLOC = 2
 		} code;
 
 		Error(Error::type t, std::string_view str)
@@ -37,9 +52,6 @@ public:
 		std::string_view str() { return str_; }
 	};
 
-	Program(); /*Конструктор программы. Выбрасывает исключения*/
-	~Program();/*Деструктор программы*/
-
 	/*Удаление конструктора копирования*/
 	Program(Program const &) = delete;
 
@@ -47,5 +59,17 @@ public:
 	Program & operator=(Program const &) = delete;
 
 	/*Диспетчер*/
-	int operator()();
+	void operator()();
+
+	/*Метод получения сообщения из объектов для рассылки другим объектам*/
+	void send_msg(Message * msg) { msg_list_.push_back(msg); }
+
+	/*Геттер/конструктор объекта программы*/
+	static Program * get();
+
+	static void quit()
+	{
+		delete inst_;
+		inst_ = nullptr;
+	}
 };

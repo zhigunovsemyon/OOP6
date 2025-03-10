@@ -1,5 +1,6 @@
 #include "program.h"
-// #include <cassert>
+#include "obj.h"
+#include <cassert>
 
 /*Функция отрабатывает нажатия пользователя в ev, меняет размер screenSize окна
  * wind и ход выполнения программы runFlag*/
@@ -23,7 +24,7 @@ void EventHandler(bool * runFlag, SDL_Event * ev)
 }
 
 /*Функция рисования фона рисовальщика rend, цветом r g b*/
-int DrawBackground(SDL_Renderer * rend, SDL_Colour const * col) 
+int DrawBackground(SDL_Renderer * rend, SDL_Colour const * col)
 {
 	if (SDL_SetRenderDrawColor(rend, col->r, col->g, col->b, col->a) ||
 	    SDL_RenderClear(rend)) {
@@ -33,7 +34,8 @@ int DrawBackground(SDL_Renderer * rend, SDL_Colour const * col)
 	return 0;
 }
 
-int Program::operator()()
+/*Диспетчер программы*/
+void Program::operator()()
 {
 	bool runs{true};
 	while (runs) { // Обработка событий
@@ -48,8 +50,6 @@ int Program::operator()()
 		SDL_RenderPresent(rend_); // Вывод его на экран
 		SDL_Delay(frametime_); // Задержка перед новым этапом отрисовки
 	}
-
-	return 0;
 }
 
 /*Завершение работы программы*/
@@ -62,19 +62,11 @@ Program::~Program()
 		SDL_DestroyWindow(win_);
 
 	SDL_Quit();
-
-	running_ = false;
 }
 
 /*Запуск программы*/
 Program::Program()
 {
-	/*Если программа уже работает*/
-	if (running_)
-		return;
-
-	running_ = true; /*Установка флага работы программы*/
-
 	/*Запуск SDL*/
 	if (SDL_Init(SDL_INIT_VIDEO))
 		throw Program::Error(Program::Error::type::SDL, SDL_GetError());
@@ -90,5 +82,17 @@ Program::Program()
 		throw Program::Error(Program::Error::type::SDL, SDL_GetError());
 }
 
-bool Program::running_{false};
+/*Геттер/конструктор объекта программы*/
+Program * Program::get()
+{
+	if (!inst_) {
+		if (nullptr == (inst_ = new (std::nothrow) Program))
+			throw Program::Error(
+				Program::Error::type::BAD_ALLOC,
+				"Failed to create Program instance");
+	}
+	return inst_;
+}
 
+/*Начальное значение указателя на объект программы*/
+Program * Program::inst_{nullptr};
