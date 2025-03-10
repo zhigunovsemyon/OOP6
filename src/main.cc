@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <cassert>
 #include <iostream>
 #include <string_view>
 
@@ -37,10 +38,17 @@ public:
 		std::string_view str() { return str_; }
 	};
 
-	Program();
-	~Program();
+	Program(); /*Конструктор программы. Выбрасывает исключения*/
+	~Program();/*Деструктор программы*/
 
-	void operator()();
+	/*Удаление конструктора копирования*/
+	Program(Program const &) = delete;
+
+	/*Удаление операции присвоения*/
+	Program & operator=(Program const &) = delete;
+
+	/*Диспетчер*/
+	int operator()();
 };
 
 /*Функция отрабатывает нажатия пользователя в ev, меняет размер screenSize окна
@@ -65,17 +73,17 @@ void EventHandler(bool * runFlag, SDL_Event * ev)
 }
 
 /*Функция рисования фона рисовальщика rend, цветом r g b*/
-bool DrawBackground(SDL_Renderer * rend, SDL_Colour const & col) noexcept
+int DrawBackground(SDL_Renderer * rend, SDL_Colour const * col) 
 {
-	if (SDL_SetRenderDrawColor(rend, col.r, col.g, col.b, col.a) ||
+	if (SDL_SetRenderDrawColor(rend, col->r, col->g, col->b, col->a) ||
 	    SDL_RenderClear(rend)) {
-		return true;
+		return 1;
 	}
 	/*else*/
-	return false;
+	return 0;
 }
 
-void Program::operator()()
+int Program::operator()()
 {
 	bool runs{true};
 	while (runs) { // Обработка событий
@@ -83,13 +91,15 @@ void Program::operator()()
 			EventHandler(&runs, &event_);
 
 		// Заливка фона, завершение работы если не удалось
-		if (DrawBackground(rend_, bgcolour_))
+		if (DrawBackground(rend_, &bgcolour_))
 			throw Program::Error(Program::Error::type::SDL,
 					     SDL_GetError());
 
 		SDL_RenderPresent(rend_); // Вывод его на экран
 		SDL_Delay(frametime_); // Задержка перед новым этапом отрисовки
 	}
+
+	return 0;
 }
 
 /*Завершение работы программы*/
@@ -135,8 +145,9 @@ bool Program::running_{false};
 int main()
 {
 	try {
-		Program{}();
+		return Program{}();
 	} catch (Program::Error err) {
+		assert(err.fail());
 		if (err.code == Program::Error::type::SDL) {
 			std::cerr << "Ошибка SDL: " << err.str();
 			return static_cast<int>(err.code);
