@@ -1,5 +1,4 @@
 #include "program.h"
-#include "obj.h"
 #include <cassert>
 
 /*Функция отрабатывает нажатия пользователя в ev, меняет размер screenSize окна
