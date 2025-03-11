@@ -5,7 +5,9 @@ class Message {
 private:
 	/*sender_ -- отправитель сообщения, reciever_ -- получатель,
 	 * либо nullptr, если сообщение адресовано всем*/
-	Object *sender_, *reciever_;
+	[[maybe_unused]] Object *sender_, *reciever_;
+
+public:
 	enum class Type {
 		NIL,	   /*Пустое сообщение*/
 		MS_CLICK,  /*Клик мышью*/
@@ -15,11 +17,10 @@ private:
 		PROG_EXIT  /*Завершение работы*/
 	} code_;
 
-public:
 	Message(Object * sender,
 		Message::Type code = Message::Type::NIL,
 		Object * reciever = nullptr)
-		: sender_(sender), code_{code}, reciever_(reciever)
+		: sender_(sender), reciever_(reciever), code_{code}
 	{
 	}
 
