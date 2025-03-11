@@ -1,11 +1,11 @@
 #pragma once
 
+#include "graphic_obj.h"
 #include "message.h"
 #include "obj.h"
 
 #include <SDL2/SDL.h>
 #include <deque>
-#include <new>
 #include <string_view>
 
 class Program {
@@ -18,17 +18,22 @@ private:
 	SDL_Window * win_{};
 	SDL_Renderer * rend_{};
 	SDL_Event event_{};
-	// static bool running_;
 	static Program * inst_;
 
 	std::deque<Message *> msg_list_{};
-	// std::deque<Object*> obj_list_{};
+	std::deque<GraphicObject *> obj_list_{};
 
 	Program(); /*Конструктор программы. Выбрасывает исключения*/
 
-public:
+	/*Обработка ввода*/
+	void input_handle_();
+
+	/*Обработка сообщений*/
+	void msg_handle_(bool & runs);
+
 	~Program(); /*Деструктор программы*/
 
+public:
 	class Error {
 	private:
 		bool fail_;
