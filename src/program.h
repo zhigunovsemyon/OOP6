@@ -20,7 +20,7 @@ private:
 	SDL_Event event_{};
 	static Program * inst_;
 
-	std::deque<Message *> msg_list_{};
+	std::deque<Message> msg_list_{};
 	std::deque<GraphicObject *> obj_list_{};
 
 	Program(); /*Конструктор программы. Выбрасывает исключения*/
@@ -72,7 +72,7 @@ public:
 	void operator()();
 
 	/*Метод получения сообщения из объектов для рассылки другим объектам*/
-	void send_msg(Message * msg) { msg_list_.push_back(msg); }
+	void send_msg(Message && msg) { msg_list_.push_back(std::move(msg)); }
 
 	/*Геттер/конструктор объекта программы*/
 	static Program * get();

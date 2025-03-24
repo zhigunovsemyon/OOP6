@@ -10,7 +10,7 @@ public:
 	virtual ~Object() = default;
 
 	/*Метод передачи сообщения инстансу программы*/
-	void send_msg(Message * msg);
+	void send_msg(Message && msg);
 
 	/*Интерфейс получения сообщения*/
 	virtual void recieve_msg() = 0;

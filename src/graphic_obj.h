@@ -9,12 +9,12 @@ private:
 protected:
 	GraphicObject(int pos_x, int pos_y) : SDL_Point{pos_x, pos_y}
 	{
-		send_msg(new Message{this, Message::Type::OBJ_SPAWN});
+		send_msg(Message{this, Message::Type::OBJ_SPAWN});
 	}
 
 	~GraphicObject()
 	{
-		send_msg(new Message{this, Message::Type::OBJ_DEL});
+		send_msg(Message{this, Message::Type::OBJ_DEL});
 	}
 
 	virtual void draw() const = 0;

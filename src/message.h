@@ -24,5 +24,12 @@ public:
 	{
 	}
 
+	Message(Message && ot)
+		: sender_(ot.sender_), reciever_(ot.reciever_), code_{ot.code_}
+	{
+		ot.code_ = Message::Type::NIL;
+		ot.reciever_ = ot.sender_ = nullptr;
+	}
+
 	void clear() { code_ = Message::Type::NIL; }
 };

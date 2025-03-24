@@ -8,10 +8,9 @@ void Program::msg_handle_(bool & runs)
 		return;
 
 	/*Извлечение крайнего сообщения*/
-	auto lastmsg = msg_list_.front();
-	msg_list_.pop_front();
+	auto & lastmsg = msg_list_.front();
 
-	switch (lastmsg->code_) {
+	switch (lastmsg.code_) {
 	case Message::Type::PROG_EXIT:
 		runs = false;
 		break;
@@ -19,7 +18,8 @@ void Program::msg_handle_(bool & runs)
 		break;
 	}
 
-	delete lastmsg;
+	msg_list_.pop_front();
+	// delete lastmsg;
 }
 
 /*Функция отрабатывает нажатия пользователя */
@@ -30,15 +30,15 @@ void Program::input_handle_()
 		break;
 	case SDL_KEYUP:
 		if (SDL_SCANCODE_ESCAPE == event_.key.keysym.scancode)
-			send_msg(new Message{NULL, Message::Type::PROG_EXIT});
+			send_msg(Message{NULL, Message::Type::PROG_EXIT});
 		// *runFlag = false;
 		if (SDL_SCANCODE_Q == event_.key.keysym.scancode)
-			send_msg(new Message{NULL, Message::Type::PROG_EXIT});
+			send_msg(Message{NULL, Message::Type::PROG_EXIT});
 		// *runFlag = false;
 		return;
 
 		if (SDL_WINDOWEVENT_CLOSE == event_.window.event)
-			send_msg(new Message{NULL, Message::Type::PROG_EXIT});
+			send_msg(Message{NULL, Message::Type::PROG_EXIT});
 		// *runFlag = false;
 
 		return;
