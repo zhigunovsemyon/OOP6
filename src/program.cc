@@ -10,7 +10,7 @@ void Program::msg_handle_(bool & runs)
 	/*Извлечение крайнего сообщения*/
 	auto & lastmsg = msg_list_.front();
 
-	switch (lastmsg.code_) {
+	switch (lastmsg.code()) {
 	case Message::Type::PROG_EXIT:
 		runs = false;
 		break;

@@ -2,12 +2,8 @@
 #include "obj.h"
 
 class Message {
-private:
-	/*sender_ -- отправитель сообщения, reciever_ -- получатель,
-	 * либо nullptr, если сообщение адресовано всем*/
-	[[maybe_unused]] Object *sender_, *reciever_;
-
 public:
+	/*Возможные сообщения*/
 	enum class Type {
 		NIL,	   /*Пустое сообщение*/
 		MS_CLICK,  /*Клик мышью*/
@@ -15,7 +11,7 @@ public:
 		OBJ_SPAWN, /*Появление нового объекта*/
 		OBJ_DEL,   /*Удаление объекта*/
 		PROG_EXIT  /*Завершение работы*/
-	} code_;
+	};
 
 	Message(Object * sender,
 		Message::Type code = Message::Type::NIL,
@@ -32,4 +28,18 @@ public:
 	}
 
 	void clear() { code_ = Message::Type::NIL; }
+
+	Message::Type code() const { return code_; }
+
+	Object * sender() const { return sender_; }
+
+	Object * reciever() const { return reciever_; }
+
+private:
+	/*sender_ -- отправитель сообщения, reciever_ -- получатель,
+	 * либо nullptr, если сообщение адресовано всем*/
+	Object *sender_, *reciever_;
+
+	/*Код сообщения*/
+	Type code_;
 };
