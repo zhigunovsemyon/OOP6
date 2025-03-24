@@ -9,15 +9,21 @@ try {
 	prog->quit();
 
 	return EXIT_SUCCESS;
-} catch (Program::Error err) {
-	assert(err.fail());
-	switch (err.code) {
+} catch (std::exception & err) {
+	Program::Error * myerr{dynamic_cast<Program::Error *>(&err)};
+	if (!myerr) {
+		std::cerr << "Ошибка не предусмотрена в Program::Error. "
+			  << "Сообщение: " << err.what() << '\n';
+		return -1;
+	}
+	assert(myerr->fail());
+	switch (myerr->code) {
 	case (Program::Error::type::BAD_ALLOC):
-		std::cerr << "Ошибка new: " << err.str();
+		std::cerr << "Ошибка new: " << err.what();
 		break;
 	case (Program::Error::type::SDL):
-		std::cerr << "Ошибка SDL: " << err.str();
+		std::cerr << "Ошибка SDL: " << err.what();
 		break;
-		return static_cast<int>(err.code);
 	}
+	return static_cast<int>(myerr->code);
 }

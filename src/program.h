@@ -34,7 +34,7 @@ private:
 	~Program(); /*Деструктор программы*/
 
 public:
-	class Error {
+	class Error : public std::exception {
 	private:
 		bool fail_;
 		std::string_view str_;
@@ -54,7 +54,12 @@ public:
 		bool fail() { return fail_; }
 
 		/*Сообщение об ошибке*/
-		std::string_view str() { return str_; }
+		char const * what() const noexcept override
+		{
+			return str_.data();
+		}
+
+		~Error() override = default;
 	};
 
 	/*Удаление конструктора копирования*/
