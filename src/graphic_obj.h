@@ -16,12 +16,19 @@ protected:
 	/*Координаты центра объекта*/
 	SDL_Point pos_;
 
-	GraphicObject(int pos_x, int pos_y) : pos_{pos_x, pos_y}
+	/*Флаг выделенности объекта*/
+	bool selected_;
+
+	GraphicObject(int pos_x, int pos_y)
+		: pos_{pos_x, pos_y}, selected_{false}
 	{
 		send_msg(Message{this, Message::Type::OBJ_SPAWN});
 	}
 
-	~GraphicObject() { send_msg(Message{this, Message::Type::OBJ_DEL}); }
+	~GraphicObject() override
+	{
+		send_msg(Message{this, Message::Type::OBJ_DEL});
+	}
 
 public:
 	virtual void draw(SDL_Renderer *) const = 0;
