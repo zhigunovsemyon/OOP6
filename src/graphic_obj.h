@@ -2,20 +2,30 @@
 #include "message.h"
 #include "obj.h"
 #include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 
-class GraphicObject : private SDL_Point, public Object {
+class GraphicObject : public Object {
 private:
 
 protected:
-	GraphicObject(int pos_x, int pos_y) : SDL_Point{pos_x, pos_y}
+	/*Стандартный цвет объекта*/
+	static constexpr SDL_Colour def_colour{0xFF, 0, 0, 0xFF};
+	/*Цвет выделенного объекта*/
+	static constexpr SDL_Colour sel_colour{0, 0xFF, 0, 0xFF};
+
+	/*Координаты центра объекта*/
+	SDL_Point pos_;
+
+	GraphicObject(int pos_x, int pos_y) : pos_{pos_x, pos_y}
 	{
 		send_msg(Message{this, Message::Type::OBJ_SPAWN});
 	}
 
-	~GraphicObject()
-	{
-		send_msg(Message{this, Message::Type::OBJ_DEL});
-	}
+	~GraphicObject() { send_msg(Message{this, Message::Type::OBJ_DEL}); }
 
-	virtual void draw() const = 0;
+public:
+	virtual void draw(SDL_Renderer *) const = 0;
+
+	/*Местоположение объекта*/
+	SDL_Point const & pos() { return pos_; }
 };
