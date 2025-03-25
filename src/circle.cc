@@ -1,7 +1,7 @@
 #include "circle.h"
 #include "program.h"
-#include <SDL2/SDL_error.h>
-#include <SDL2/SDL_render.h>
+#include <SDL_error.h>
+#include <SDL_render.h>
 
 /*Рисование круга рисовальщиком rend, радиуса rad, c центром в pos, цвета col,
 с числом полигонов circle_presicion Возвращает 0 при штатной работе, либо 1*/
@@ -15,10 +15,10 @@ static int DrawCircle(SDL_Renderer * rend,
 	verts[0].color = verts[1].color = verts[2].color = *col;
 
 	verts[0].tex_coord = verts[1].tex_coord = verts[2].tex_coord =
-		(SDL_FPoint){0, 0};
+		SDL_FPoint{0.0f, 0.0f};
 
 	// Определение вершины, расположенной в центре круга на всех полигонах
-	verts[0].position = (SDL_FPoint){(float)centre.x, (float)centre.y};
+	verts[0].position = SDL_FPoint{(float)centre.x, (float)centre.y};
 
 	for (int i = 0; i < circle_presicion; ++i) {
 		// Определение остальных вершин полигонов, сдвинутых на углы

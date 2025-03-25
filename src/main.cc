@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 
-int main()
+int main(int, char *[])
 try {
 	auto prog{Program::get()};
 	prog->run();

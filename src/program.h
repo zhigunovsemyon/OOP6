@@ -4,7 +4,7 @@
 #include "message.h"
 #include "obj.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <deque>
 #include <string_view>
 
