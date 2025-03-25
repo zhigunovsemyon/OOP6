@@ -6,12 +6,12 @@ class Message;
 class Object {
 private:
 
-public:
+protected:
 	virtual ~Object() = default;
 
 	/*Метод передачи сообщения инстансу программы*/
-	void send_msg(Message && msg);
+	void send_msg(Message &&);
 
 	/*Интерфейс получения сообщения*/
-	virtual void recieve_msg() = 0;
+	virtual void recieve_msg(Message &&) = 0;
 };
