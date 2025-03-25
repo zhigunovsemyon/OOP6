@@ -57,7 +57,7 @@ static int DrawBackground_(SDL_Renderer * rend, SDL_Colour const * col)
 }
 
 /*Диспетчер программы*/
-void Program::operator()()
+void Program::run()
 {
 	bool runs{true};
 	while (runs) { // Обработка событий

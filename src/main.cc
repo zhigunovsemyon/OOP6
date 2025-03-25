@@ -5,7 +5,7 @@
 int main()
 try {
 	auto prog{Program::get()};
-	(*prog)();
+	prog->run();
 	prog->quit();
 
 	return EXIT_SUCCESS;
@@ -14,8 +14,10 @@ try {
 	if (!myerr) {
 		std::cerr << "Ошибка не предусмотрена в Program::Error. "
 			  << "Сообщение: " << err.what() << '\n';
+		Program::get()->quit();
 		return -1;
 	}
+
 	assert(myerr->fail());
 	switch (myerr->code) {
 	case (Program::Error::type::BAD_ALLOC):
@@ -25,5 +27,6 @@ try {
 		std::cerr << "Ошибка SDL: " << err.what();
 		break;
 	}
+	Program::get()->quit();
 	return static_cast<int>(myerr->code);
 }
