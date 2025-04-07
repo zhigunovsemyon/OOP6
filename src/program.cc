@@ -29,6 +29,8 @@ void Program::input_handle_()
 	default:
 		break;
 	case SDL_KEYUP:
+		// if (SDL_SCANCODE_E == event_.key.keysym.scancode && (KMOD_ALT & event_.key.keysym.mod))
+
 		if (SDL_SCANCODE_ESCAPE == event_.key.keysym.scancode)
 			send_msg(Message{NULL, Message::Type::PROG_EXIT});
 		// *runFlag = false;
