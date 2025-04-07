@@ -5,8 +5,12 @@
 #include "obj.h"
 
 #include <SDL.h>
-#include <list>
+#ifndef SDL_h_
+#include <SDL2/SDL.h>
+#endif /* ifndef _SDL_h */
+
 #include <string_view>
+#include <list>
 
 class Program {
 private:

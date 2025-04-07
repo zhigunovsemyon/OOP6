@@ -1,8 +1,16 @@
 #pragma once
 #include "message.h"
 #include "obj.h"
+
 #include <SDL_rect.h>
+#ifndef SDL_rect_h_
+#include <SDL2/SDL_rect.h>
+#endif /* ifndef _SDL_h */
+
 #include <SDL_render.h>
+#ifndef SDL_render_h_
+#include <SDL2/SDL_render.h>
+#endif /* ifndef _SDL_h */
 
 class GraphicObject : public Object {
 private:
