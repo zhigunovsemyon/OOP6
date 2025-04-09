@@ -3,7 +3,6 @@
 #include "graphic_obj.h"
 #include "message.h"
 #include "obj.h"
-#include "sdlexcept.h"
 
 #include <SDL_events.h>
 #ifndef SDL_events_h_

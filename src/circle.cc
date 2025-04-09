@@ -1,7 +1,5 @@
 #include "circle.h"
-#include "program.h"
-#include <SDL_error.h>
-#include <SDL_render.h>
+#include "sdlexcept.h"
 
 /*Рисование круга рисовальщиком rend, радиуса rad, c центром в pos, цвета col,
 с числом полигонов circle_presicion Возвращает 0 при штатной работе, либо 1*/

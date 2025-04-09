@@ -1,4 +1,5 @@
 #include "program.h"
+#include "sdlexcept.h"
 #include "message.h"
 #include <cassert>
 
