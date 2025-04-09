@@ -1,4 +1,6 @@
 #include "program.h"
+#include "sdlexcept.h"
+
 #include <cassert>
 #include <iostream>
 
@@ -9,25 +11,17 @@ try {
 	prog->quit();
 
 	return EXIT_SUCCESS;
-} catch (std::exception & err) {
-	// Program::Error * myerr{dynamic_cast<Program::Error *>(&err)};
-	// if (!myerr) {
-	// 	std::cerr << "Ошибка не предусмотрена в Program::Error. "
-	// 		  << "Сообщение: " << err.what() << '\n';
-	// 	Program::get()->quit();
-	// 	return -1;
-	// }
-	//
-	// assert(myerr->fail());
-	// switch (myerr->code) {
-	// case (Program::Error::type::BAD_ALLOC):
-	// 	std::cerr << "Ошибка new: " << err.what();
-	// 	break;
-	// case (Program::Error::type::SDL):
-	// 	std::cerr << "Ошибка SDL: " << err.what();
-	// 	break;
-	// }
+} catch (SDL_exception & err) {
+	std::cerr << "Ошибка SDL. Сообщение: " << err.what() << std::endl;
 	Program::get()->quit();
 	return EXIT_FAILURE;
-	// return static_cast<int>(myerr->code);
+} catch (std::exception & err) {
+	std::cerr << "Поймано иное исключение. Сообщение: " << err.what()
+		  << std::endl;
+	Program::get()->quit();
+	return EXIT_FAILURE;
+} catch (...) {
+	std::cerr << "Поймано неизвестное исключение\n";
+	Program::get()->quit();
+	return EXIT_FAILURE;
 }
