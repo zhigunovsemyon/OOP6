@@ -3,14 +3,25 @@
 #include "graphic_obj.h"
 #include "message.h"
 #include "obj.h"
+#include "sdlexcept.h"
 
-#include <SDL.h>
-#ifndef SDL_h_
-#include <SDL2/SDL.h>
-#endif /* ifndef _SDL_h */
+#include <SDL_events.h>
+#ifndef SDL_events_h_
+#include <SDL2/SDL_events.h>
+#endif // !SDL_events_h
 
-#include <string_view>
+#include <SDL_render.h>
+#ifndef SDL_render_h_
+#include <SDL2/SDL_render.h>
+#endif
+
+#include <SDL_video.h>
+#ifndef SDL_video_h_
+#include <SDL2/SDL_video.h>
+#endif // !SDL_video_h_
+
 #include <list>
+#include <string_view>
 
 class Program {
 private:
@@ -38,34 +49,6 @@ private:
 	~Program(); /*Деструктор программы*/
 
 public:
-	class Error : public std::exception {
-	private:
-		bool fail_;
-		std::string_view str_;
-
-	public:
-		enum class type {
-			SDL = 1,
-			BAD_ALLOC = 2
-		} code;
-
-		Error(Error::type t, std::string_view str)
-			: fail_{true}, str_{str}, code{t}
-		{
-		}
-
-		/*Находится ли программа в ошибке*/
-		bool fail() { return fail_; }
-
-		/*Сообщение об ошибке*/
-		char const * what() const noexcept override
-		{
-			return str_.data();
-		}
-
-		~Error() override = default;
-	};
-
 	/*Удаление конструктора копирования*/
 	Program(Program const &) = delete;
 

@@ -2,6 +2,11 @@
 #include "message.h"
 #include <cassert>
 
+#include <SDL.h>
+#ifndef SDL_h_
+#include <SDL2/SDL.h>
+#endif // !SDL_h_
+
 void Program::msg_handle_(bool & runs)
 {
 	if (msg_list_.empty())
@@ -29,7 +34,8 @@ void Program::input_handle_()
 	default:
 		break;
 	case SDL_KEYUP:
-		// if (SDL_SCANCODE_E == event_.key.keysym.scancode && (KMOD_ALT & event_.key.keysym.mod))
+		// if (SDL_SCANCODE_E == event_.key.keysym.scancode && (KMOD_ALT
+		// & event_.key.keysym.mod))
 
 		if (SDL_SCANCODE_ESCAPE == event_.key.keysym.scancode)
 			send_msg(Message{NULL, Message::Type::PROG_EXIT});
@@ -70,8 +76,7 @@ void Program::run()
 
 		// Заливка фона, завершение работы если не удалось
 		if (DrawBackground_(rend_, &bgcolour_))
-			throw Program::Error(Program::Error::type::SDL,
-					     SDL_GetError());
+			throw SDL_exception{};
 
 		SDL_RenderPresent(rend_); // Вывод его на экран
 		SDL_Delay(frametime_); // Задержка перед новым этапом отрисовки
@@ -95,29 +100,30 @@ Program::Program()
 {
 	/*Запуск SDL*/
 	if (SDL_Init(SDL_INIT_VIDEO))
-		throw Program::Error(Program::Error::type::SDL, SDL_GetError());
+		throw SDL_exception{};
 
 	win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
 				SDL_WINDOW_SHOWN);
 	if (win_ == nullptr)
-		throw Program::Error(Program::Error::type::SDL, SDL_GetError());
+		throw SDL_exception{};
 
 	rend_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
 	if (nullptr == rend_)
-		throw Program::Error(Program::Error::type::SDL, SDL_GetError());
+		throw SDL_exception{};
 }
 
-/*Геттер/конструктор объекта программы*/
+/*Геттер/конструктор объекта программы. Выкидывает исключение при неудачном
+ * создании инстанса*/
 Program * Program::get()
 {
-	if (!inst_) {
-		if (nullptr == (inst_ = new (std::nothrow) Program))
-			throw Program::Error(
-				Program::Error::type::BAD_ALLOC,
-				"Failed to create Program instance");
-	}
-	return inst_;
+	// if (!inst_) {
+	// 	if (nullptr == (inst_ = new (std::nothrow) Program))
+	// 		throw Program::Error(
+	// 			Program::Error::type::BAD_ALLOC,
+	// 			"Failed to create Program instance");
+	// }
+	return (inst_ == nullptr) ? (inst_ = new Program) : inst_;
 }
 
 /*Начальное значение указателя на объект программы*/

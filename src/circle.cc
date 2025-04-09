@@ -52,7 +52,7 @@ void Circle::draw(SDL_Renderer * rend) const
 {
 	SDL_Colour const * used_col = &((selected_) ? sel_colour : def_colour);
 	if (DrawCircle(rend, radius_, pos_, used_col, polycount_))
-		throw Program::Error{Program::Error::type::SDL, SDL_GetError()};
+		throw SDL_exception{};
 }
 
 void Circle::recieve_msg(Message &&) {}
