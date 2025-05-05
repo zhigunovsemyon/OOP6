@@ -32,7 +32,7 @@ private:
 	SDL_Window * win_{};
 	SDL_Renderer * rend_{};
 	SDL_Event event_{};
-	static Program * inst_;
+	//static Program * inst_;
 
 	std::queue<Message> msg_list_{};
 	std::queue<GraphicObject *> obj_list_{};
@@ -67,7 +67,7 @@ public:
 
 	static void quit()
 	{
-		delete inst_;
-		inst_ = nullptr;
+		//delete inst_;
+		//inst_ = nullptr;
 	}
 };

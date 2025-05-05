@@ -90,10 +90,11 @@ Program & Program::run()
 
 	return *this;
 }
-
+#include <cstdio>
 /*Завершение работы программы*/
 Program::~Program()
 {
+	printf("destruct\n");
 	if (rend_)
 		SDL_DestroyRenderer(rend_);
 
@@ -115,11 +116,11 @@ Program::Program()
 	if (TTF_Init())
 		throw TTF_exception{};
 
-	win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
-				SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
-				SDL_WINDOW_SHOWN);
-	if (win_ == nullptr)
-		throw SDL_exception{};
+	//win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
+	//			SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
+	//			SDL_WINDOW_SHOWN);
+	//if (win_ == nullptr)
+	//	throw SDL_exception{};
 
 	rend_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
 	if (nullptr == rend_)
@@ -130,14 +131,17 @@ Program::Program()
  * создании инстанса*/
 Program & Program::get()
 {
+	static Program inst_;
+	return inst_;
 	// if (!inst_) {
 	// 	if (nullptr == (inst_ = new (std::nothrow) Program))
 	// 		throw Program::Error(
 	// 			Program::Error::type::BAD_ALLOC,
 	// 			"Failed to create Program instance");
 	// }
-	return *((inst_ == nullptr) ? (inst_ = new Program) : inst_);
+	
+	//return *((inst_ == nullptr) ? (inst_ = new Program) : inst_);
 }
 
 /*Начальное значение указателя на объект программы*/
-Program * Program::inst_{nullptr};
+//Program * Program::inst_{nullptr};
