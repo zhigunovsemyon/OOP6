@@ -30,7 +30,7 @@ void Program::msg_handle_(bool & runs)
 		break;
 	}
 
-	msg_list_.pop_front();
+	msg_list_.pop();
 }
 
 /*Функция отрабатывает нажатия пользователя */
