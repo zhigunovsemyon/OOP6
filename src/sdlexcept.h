@@ -1,3 +1,4 @@
+#pragma once
 #include <exception>
 
 class SDL_exception : public std::exception {
