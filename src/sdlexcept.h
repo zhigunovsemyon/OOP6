@@ -1,15 +1,8 @@
 #pragma once
-#include <exception>
+#include <stdexcept>
 
-class SDL_exception : public std::exception {
-private:
-	char const * str_;
-
+class SDL_exception : public std::runtime_error {
 public:
-	SDL_exception();
-
-	/*Сообщение об ошибке*/
-	char const * what() const noexcept override;
-
 	~SDL_exception() override;
+	SDL_exception();
 };

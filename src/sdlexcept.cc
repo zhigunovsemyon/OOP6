@@ -5,12 +5,6 @@
 #include <SDL2/SDL_error.h>
 #endif // SDL_error_h_
 
-SDL_exception::SDL_exception() : str_{SDL_GetError()} {}
-
-/*Сообщение об ошибке*/
-char const * SDL_exception::what() const noexcept
-{
-	return str_;
-}
+SDL_exception::SDL_exception() : std::runtime_error{SDL_GetError()} {}
 
 SDL_exception::~SDL_exception() = default;
