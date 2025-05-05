@@ -1,11 +1,17 @@
 #include "program.h"
 #include "sdlexcept.h"
+#include "ttfexcept.h"
 #include "message.h"
 #include <cassert>
 
 #include <SDL.h>
 #ifndef SDL_h_
 #include <SDL2/SDL.h>
+#endif // !SDL_h_
+
+#include <SDL_ttf.h>
+#ifndef SDL_TTF_H_
+#include <SDL2/SDL_ttf.h>
 #endif // !SDL_h_
 
 void Program::msg_handle_(bool & runs)
@@ -25,7 +31,6 @@ void Program::msg_handle_(bool & runs)
 	}
 
 	msg_list_.pop_front();
-	// delete lastmsg;
 }
 
 /*Функция отрабатывает нажатия пользователя */
@@ -95,6 +100,7 @@ Program::~Program()
 	if (win_)
 		SDL_DestroyWindow(win_);
 
+	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -104,6 +110,10 @@ Program::Program()
 	/*Запуск SDL*/
 	if (SDL_Init(SDL_INIT_VIDEO))
 		throw SDL_exception{};
+
+	/*Запуск SDL_ttf*/
+	if (TTF_Init())
+		throw TTF_exception{};
 
 	win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
