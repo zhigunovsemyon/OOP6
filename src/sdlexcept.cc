@@ -6,5 +6,6 @@
 #endif // SDL_error_h_
 
 SDL_exception::SDL_exception() : std::runtime_error{SDL_GetError()} {}
+SDL_exception::SDL_exception(const char * str) : std::runtime_error{str} {}
 
 SDL_exception::~SDL_exception() = default;
