@@ -5,12 +5,6 @@
 #include <SDL2/SDL_ttf.h>
 #endif // !SDL_h_
 
-TTF_exception::TTF_exception() : str_{TTF_GetError()} {}
-
-/*Сообщение об ошибке*/
-char const * TTF_exception::what() const noexcept
-{
-	return str_;
-}
+TTF_exception::TTF_exception() : std::runtime_error{TTF_GetError()} {}
 
 TTF_exception::~TTF_exception() = default;

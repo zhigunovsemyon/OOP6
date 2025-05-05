@@ -1,15 +1,8 @@
 #pragma once
-#include <exception>
+#include <stdexcept>
 
-class TTF_exception : public std::exception {
-private:
-	char const * str_;
-
+class TTF_exception : public std::runtime_error {
 public:
-	TTF_exception();
-
-	/*Сообщение об ошибке*/
-	char const * what() const noexcept override;
-
 	~TTF_exception() override;
+	TTF_exception();
 };
