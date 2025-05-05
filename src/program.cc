@@ -39,23 +39,19 @@ void Program::input_handle_()
 	switch (event_.type) {
 	default:
 		break;
+	case SDL_WINDOWEVENT:
+		if (SDL_WINDOWEVENT_CLOSE == event_.window.event)
+			send_msg(Message{NULL, Message::Type::PROG_EXIT});
+		break;
 	case SDL_KEYUP:
 		// if (SDL_SCANCODE_E == event_.key.keysym.scancode && (KMOD_ALT
 		// & event_.key.keysym.mod))
 
 		if (SDL_SCANCODE_ESCAPE == event_.key.keysym.scancode)
 			send_msg(Message{NULL, Message::Type::PROG_EXIT});
-		// *runFlag = false;
 		if (SDL_SCANCODE_Q == event_.key.keysym.scancode)
 			send_msg(Message{NULL, Message::Type::PROG_EXIT});
-		// *runFlag = false;
-		return;
-
-		if (SDL_WINDOWEVENT_CLOSE == event_.window.event)
-			send_msg(Message{NULL, Message::Type::PROG_EXIT});
-		// *runFlag = false;
-
-		return;
+		break;
 	}
 }
 
@@ -90,11 +86,10 @@ Program & Program::run()
 
 	return *this;
 }
-#include <cstdio>
+
 /*Завершение работы программы*/
 Program::~Program()
 {
-	printf("destruct\n");
 	if (rend_)
 		SDL_DestroyRenderer(rend_);
 
@@ -108,40 +103,46 @@ Program::~Program()
 /*Запуск программы*/
 Program::Program()
 {
+	/*При неудаче очистка осуществляется сразу в конструкторе,
+	т.к. объект не будет создан и не будет вызвано деструктора*/
+
 	/*Запуск SDL*/
 	if (SDL_Init(SDL_INIT_VIDEO))
 		throw SDL_exception{};
 
 	/*Запуск SDL_ttf*/
-	if (TTF_Init())
+	if (TTF_Init()) {
+		SDL_Quit();
 		throw TTF_exception{};
+	}
 
-	//win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
-	//			SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
-	//			SDL_WINDOW_SHOWN);
-	//if (win_ == nullptr)
-	//	throw SDL_exception{};
+	win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
+				SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
+				SDL_WINDOW_SHOWN);
+	if (win_ == nullptr){
+		/*Сохранение строки для передачи в исключение.*/
+		auto str = SDL_GetError();
+		TTF_Quit();
+		SDL_Quit();
+		throw SDL_exception{str};
+	}
 
 	rend_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
-	if (nullptr == rend_)
-		throw SDL_exception{};
+	if (nullptr == rend_){
+		/*Сохранение строки для передачи в исключение.*/
+		auto str = SDL_GetError();
+		SDL_DestroyWindow(win_);
+		TTF_Quit();
+		SDL_Quit();
+		throw SDL_exception{str};
+	}
 }
 
 /*Геттер/конструктор объекта программы. Выкидывает исключение при неудачном
  * создании инстанса*/
 Program & Program::get()
 {
+	/*Создаётся при первом вызове. Живёт всю программу*/
 	static Program inst_;
 	return inst_;
-	// if (!inst_) {
-	// 	if (nullptr == (inst_ = new (std::nothrow) Program))
-	// 		throw Program::Error(
-	// 			Program::Error::type::BAD_ALLOC,
-	// 			"Failed to create Program instance");
-	// }
-	
-	//return *((inst_ == nullptr) ? (inst_ = new Program) : inst_);
 }
-
-/*Начальное значение указателя на объект программы*/
-//Program * Program::inst_{nullptr};
