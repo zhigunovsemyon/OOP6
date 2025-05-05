@@ -19,8 +19,8 @@
 #include <SDL2/SDL_video.h>
 #endif // !SDL_video_h_
 
+#include <list>
 #include <string_view>
-#include <queue>
 
 class Program {
 private:
@@ -34,8 +34,8 @@ private:
 	SDL_Event event_{};
 	static Program * inst_;
 
-	std::queue<Message> msg_list_{};
-	std::queue<GraphicObject *> obj_list_{};
+	std::list<Message> msg_list_{};
+	std::list<GraphicObject *> obj_list_{};
 
 	Program(); /*Конструктор программы. Выбрасывает исключения*/
 
@@ -60,7 +60,7 @@ public:
 	Program & operator()() { return run(); }
 
 	/*Метод получения сообщения из объектов для рассылки другим объектам*/
-	void send_msg(Message && msg) { msg_list_.push(std::move(msg)); }
+	void send_msg(Message && msg) { msg_list_.push_back(std::move(msg)); }
 
 	/*Геттер/конструктор объекта программы*/
 	static Program & get();
