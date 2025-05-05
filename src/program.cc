@@ -66,7 +66,7 @@ static int DrawBackground_(SDL_Renderer * rend, SDL_Colour const * col)
 }
 
 /*Диспетчер программы*/
-void Program::run()
+Program & Program::run()
 {
 	bool runs{true};
 	while (runs) { // Обработка событий
@@ -82,6 +82,8 @@ void Program::run()
 		SDL_RenderPresent(rend_); // Вывод его на экран
 		SDL_Delay(frametime_); // Задержка перед новым этапом отрисовки
 	}
+
+	return *this;
 }
 
 /*Завершение работы программы*/

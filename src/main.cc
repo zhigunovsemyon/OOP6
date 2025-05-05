@@ -6,11 +6,7 @@
 
 int main(int, char *[])
 try {
-	// auto prog{Program::get()};
-	// prog->run();
-	// prog->quit();
-	Program::get().run();
-	Program::get().quit();
+	Program::get().run().quit();
 	return EXIT_SUCCESS;
 } catch (SDL_exception & err) {
 	std::cerr << "Ошибка SDL. Сообщение: " << err.what() << std::endl;

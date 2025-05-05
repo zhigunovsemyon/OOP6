@@ -55,9 +55,9 @@ public:
 	Program & operator=(Program const &) = delete;
 
 	/*Диспетчер*/
-	void run();
+	Program & run();
 
-	void operator()() { run(); }
+	Program & operator()() { return run(); }
 
 	/*Метод получения сообщения из объектов для рассылки другим объектам*/
 	void send_msg(Message && msg) { msg_list_.push_back(std::move(msg)); }
