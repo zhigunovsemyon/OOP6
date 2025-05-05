@@ -116,7 +116,7 @@ Program::Program()
 
 /*Геттер/конструктор объекта программы. Выкидывает исключение при неудачном
  * создании инстанса*/
-Program * Program::get()
+Program & Program::get()
 {
 	// if (!inst_) {
 	// 	if (nullptr == (inst_ = new (std::nothrow) Program))
@@ -124,7 +124,7 @@ Program * Program::get()
 	// 			Program::Error::type::BAD_ALLOC,
 	// 			"Failed to create Program instance");
 	// }
-	return (inst_ == nullptr) ? (inst_ = new Program) : inst_;
+	return *((inst_ == nullptr) ? (inst_ = new Program) : inst_);
 }
 
 /*Начальное значение указателя на объект программы*/

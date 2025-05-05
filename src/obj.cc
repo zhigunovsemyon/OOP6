@@ -5,5 +5,5 @@
 
 void Object::send_msg(Message && msg)
 {
-	Program::get()->send_msg(std::move(msg));
+	Program::get().send_msg(std::move(msg));
 }

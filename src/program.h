@@ -63,7 +63,7 @@ public:
 	void send_msg(Message && msg) { msg_list_.push_back(std::move(msg)); }
 
 	/*Геттер/конструктор объекта программы*/
-	static Program * get();
+	static Program & get();
 
 	static void quit()
 	{
