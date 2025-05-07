@@ -6,7 +6,7 @@
 
 int main(int, char *[])
 try {
-	Program::get().run();
+	Program::get()();
 	return EXIT_SUCCESS;
 } catch (SDL_exception & err) {
 	std::cerr << "Ошибка SDL. Сообщение: " << err.what() << std::endl;

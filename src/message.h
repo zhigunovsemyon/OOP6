@@ -15,25 +15,25 @@ public:
 
 	Message(Object * sender,
 		Message::Type code = Message::Type::NIL,
-		Object * reciever = nullptr)
+		Object * reciever = nullptr) noexcept
 		: sender_(sender), reciever_(reciever), code_{code}
 	{
 	}
 
-	Message(Message && ot)
+	Message(Message && ot) noexcept
 		: sender_(ot.sender_), reciever_(ot.reciever_), code_{ot.code_}
 	{
 		ot.code_ = Message::Type::NIL;
 		ot.reciever_ = ot.sender_ = nullptr;
 	}
 
-	void clear() { code_ = Message::Type::NIL; }
+	void clear() noexcept { code_ = Message::Type::NIL; }
 
-	Message::Type code() const { return code_; }
+	Message::Type code() const noexcept { return code_; }
 
-	Object * sender() const { return sender_; }
+	Object * sender() const noexcept { return sender_; }
 
-	Object * reciever() const { return reciever_; }
+	Object * reciever() const noexcept { return reciever_; }
 
 private:
 	/*sender_ -- отправитель сообщения, reciever_ -- получатель,
