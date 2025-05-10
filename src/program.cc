@@ -1,8 +1,12 @@
-#include "program.h"
+#include <SDL2/SDL_render.h>
+#include <algorithm>
+#include <cassert>
+#include <memory>
+
 #include "message.h"
+#include "program.h"
 #include "sdlexcept.h"
 #include "ttfexcept.h"
-#include <cassert>
 
 #include <SDL.h>
 #ifndef SDL_h_
@@ -13,6 +17,11 @@
 #ifndef SDL_TTF_H_
 #include <SDL2/SDL_ttf.h>
 #endif // !SDL_h_
+
+#include <SDL_surface.h>
+#ifndef SDL_surface_h_
+#include <SDL2/SDL_surface.h>
+#endif // !SDL_surface_h_
 
 void Program::msg_handle_(bool & runs)
 {
@@ -66,6 +75,26 @@ static int DrawBackground_(SDL_Renderer * rend, SDL_Colour const * col)
 	return 0;
 }
 
+void Program::draw_text(std::string_view txt, SDL_Point const & corner)
+{
+	auto surf{TTF_RenderUTF8_LCD(font_, txt.data(), TextCol_, bgcolour_)};
+	if (!surf)
+		throw TTF_exception{};
+	SDL_Rect const dest_rect{corner.x, corner.y, surf->w, surf->h};
+
+	auto texture{SDL_CreateTextureFromSurface(rend_, surf)};
+	if (!texture) {
+		SDL_FreeSurface(surf);
+		throw SDL_exception{};
+	}
+
+	if (SDL_RenderCopy(rend_, texture, NULL, &dest_rect)) {
+		SDL_DestroyTexture(texture);
+		SDL_FreeSurface(surf);
+		throw SDL_exception{};
+	}
+}
+
 /*Диспетчер программы*/
 Program & Program::run()
 {
@@ -79,6 +108,8 @@ Program & Program::run()
 		// Заливка фона, завершение работы если не удалось
 		if (DrawBackground_(rend_, &bgcolour_))
 			throw SDL_exception{};
+
+		draw_text("sample text", {});
 
 		SDL_RenderPresent(rend_); // Вывод его на экран
 		SDL_Delay(frametime_); // Задержка перед новым этапом отрисовки
@@ -140,7 +171,8 @@ Program::Program()
 		throw SDL_exception{str};
 	}
 
-	if ((font_ = TTF_OpenFont(FontLoc_.data(), 10)) == nullptr) {
+	font_ = TTF_OpenFont(FontPath_.data(), FontSize_);
+	if (font_ == nullptr) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
 		SDL_DestroyRenderer(rend_);

@@ -1,10 +1,14 @@
 #pragma once
 
+#include <queue>
+#include <string_view>
+
 #include "graphic_obj.h"
 #include "message.h"
 #include "obj.h"
 
 #include <SDL_events.h>
+#include <utility>
 #ifndef SDL_events_h_
 #include <SDL2/SDL_events.h>
 #endif // !SDL_events_h
@@ -24,16 +28,16 @@
 #include <SDL2/SDL_video.h>
 #endif // !SDL_video_h_
 
-#include <string_view>
-#include <queue>
-
 class Program {
 private:
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
 	static constexpr SDL_Point winsize_{640, 480};
 	static constexpr int frametime_{10};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
-	static constexpr std::string_view FontLoc_{"assets/font.ttf"};
+
+	static constexpr std::string_view FontPath_{"assets/font.ttf"};
+	static constexpr int FontSize_{16};
+	static constexpr SDL_Colour TextCol_{0xFF, 0x00, 0x00, 0xFF};
 
 	TTF_Font * font_{};
 	SDL_Window * win_{};
@@ -52,6 +56,8 @@ private:
 	void msg_handle_(bool & runs);
 
 	~Program(); /*Деструктор программы*/
+
+	void draw_text(std::string_view, SDL_Point const & corner);
 
 public:
 	/*Удаление конструктора копирования*/
