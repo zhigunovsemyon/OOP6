@@ -12,6 +12,7 @@ protected:
 	/*Метод передачи сообщения инстансу программы*/
 	void send_msg(Message *);
 
+public:
 	/*Интерфейс получения сообщения*/
 	virtual void recieve_msg(Message *) = 0;
 };
