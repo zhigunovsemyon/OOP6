@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <string_view>
+#include <utility>
 
 #include "graphic_obj.h"
 #include "interact.h"
@@ -9,7 +10,6 @@
 #include "obj.h"
 
 #include <SDL_events.h>
-#include <utility>
 #ifndef SDL_events_h_
 #include <SDL2/SDL_events.h>
 #endif // !SDL_events_h
@@ -42,7 +42,11 @@ private:
 	static constexpr int frametime_{10};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
 
+#ifdef WIN32
+	static constexpr std::string_view FontPath_{"..\\..\\..\\assets\\font.ttf"};
+#else
 	static constexpr std::string_view FontPath_{"assets/font.ttf"};
+#endif
 	static constexpr int FontSize_{16};
 	static constexpr SDL_Colour TextCol_{0xFF, 0x00, 0x00, 0xFF};
 
