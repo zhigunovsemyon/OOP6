@@ -16,39 +16,60 @@ public:
 		MOVER,
 		RESIZER,
 		CREATOR,
-		DELETER
+		DELETER,
+		BASIC
 	};
 	virtual ~InteractBase() = default;
 	virtual void click(SDL_Point const &){};
 
 	virtual void kb_press(SDL_Scancode) const;
 
-	InteractBase::Type type() const { return t_; }
-
-private:
-	Type t_;
+	virtual InteractBase::Type type() const
+	{
+		return InteractBase::Type::BASIC;
+	}
 };
 
 class InteractMove : public InteractBase {
 public:
 	void kb_press(SDL_Scancode) const override;
 	void click(SDL_Point const &) override;
+
+	InteractBase::Type type() const override
+	{
+		return InteractBase::Type::MOVER;
+	}
 };
 
 class InteractResize : public InteractBase {
 public:
 	void kb_press(SDL_Scancode) const override;
 	void click(SDL_Point const &) override;
+
+	InteractBase::Type type() const override
+	{
+		return InteractBase::Type::RESIZER;
+	}
 };
 
 class InteractDelete : public InteractBase {
 public:
 	void kb_press(SDL_Scancode) const override;
 	void click(SDL_Point const &) override;
+
+	InteractBase::Type type() const override
+	{
+		return InteractBase::Type::DELETER;
+	}
 };
 
 class InteractCreate : public InteractBase {
 public:
 	void click(SDL_Point const &) override;
 	void kb_press(SDL_Scancode) const override;
+
+	InteractBase::Type type() const override
+	{
+		return InteractBase::Type::CREATOR;
+	}
 };
