@@ -35,6 +35,7 @@ private:
 	InteractCreate creator_;
 	InteractDelete deleter_;
 	InteractMove mover_;
+	InteractBase basic_interactor_;
 	InteractBase *interactor_;
 	
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
