@@ -61,6 +61,26 @@ void Program::msg_handle_(bool & runs)
 		obj_list_.push_back(dynamic_cast<GraphicObject*>(spawn_msg.sender()));
 		break;
 	}
+	case Message::Type::PROG_CHMOD: {
+		switch (dynamic_cast<MessageChmod &>(lastmsg).mode()) {
+		case InteractBase::type():
+			interactor_ = &basic_interactor_;
+			break;
+		case InteractDelete::type():
+			interactor_ = &deleter_;
+			break;
+		case InteractCreate::type():
+			interactor_ = &creator_;
+			break;
+		case InteractResize::type():
+			interactor_ = &resizer_;
+			break;
+		case InteractMove::type():
+			interactor_ = &mover_;
+			break;
+		}
+		break;
+	}
 	default:
 		break;
 	}

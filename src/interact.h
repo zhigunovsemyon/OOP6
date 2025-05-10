@@ -24,7 +24,7 @@ public:
 
 	virtual void kb_press(SDL_Scancode) const;
 
-	virtual InteractBase::Type type() const
+	static constexpr InteractBase::Type type()
 	{
 		return InteractBase::Type::BASIC;
 	}
@@ -35,7 +35,7 @@ public:
 	void kb_press(SDL_Scancode) const override;
 	void click(SDL_Point const &) override;
 
-	InteractBase::Type type() const override
+	static constexpr InteractBase::Type type()
 	{
 		return InteractBase::Type::MOVER;
 	}
@@ -46,7 +46,7 @@ public:
 	void kb_press(SDL_Scancode) const override;
 	void click(SDL_Point const &) override;
 
-	InteractBase::Type type() const override
+	static constexpr InteractBase::Type type()
 	{
 		return InteractBase::Type::RESIZER;
 	}
@@ -57,7 +57,7 @@ public:
 	void kb_press(SDL_Scancode) const override;
 	void click(SDL_Point const &) override;
 
-	InteractBase::Type type() const override
+	static constexpr InteractBase::Type type()
 	{
 		return InteractBase::Type::DELETER;
 	}
@@ -68,7 +68,7 @@ public:
 	void click(SDL_Point const &) override;
 	void kb_press(SDL_Scancode) const override;
 
-	InteractBase::Type type() const override
+	static constexpr InteractBase::Type type()
 	{
 		return InteractBase::Type::CREATOR;
 	}
