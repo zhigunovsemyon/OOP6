@@ -43,7 +43,7 @@ void Program::msg_handle_(bool & runs)
 	msg_list_.pop();
 
 	switch (lastmsg.code()) {
-	case Message::Type::OBJ_DEL: {
+	case Message::Type::PROG_DEL: {
 		auto const & del_msg{dynamic_cast<MessageDelete &>(lastmsg)};
 		auto del_fn = [&](auto * o) {
 			if (o->covers({del_msg.x(), del_msg.y()})) {
@@ -54,12 +54,12 @@ void Program::msg_handle_(bool & runs)
 		std::for_each(obj_list_.begin(), obj_list_.end(), del_fn);
 		break;
 	}
-	case Message::Type::MS_CLICK: {
+	case Message::Type::OBJ_CLICK: {
 		auto const & click_msg{dynamic_cast<MessageClick &>(lastmsg)};
 		interactor_->click({click_msg.x(), click_msg.y()});
 		break;
 	}
-	case Message::Type::KB_HIT: {
+	case Message::Type::OBJ_KBHIT: {
 		auto const & kbhit_msg{
 			dynamic_cast<MessageKeyboard &>(lastmsg)};
 		interactor_->kb_press({kbhit_msg.kbcode()});
@@ -68,7 +68,7 @@ void Program::msg_handle_(bool & runs)
 	case Message::Type::PROG_EXIT:
 		runs = false;
 		break;
-	case Message::Type::OBJ_SPAWN: {
+	case Message::Type::PROG_SPAWN: {
 		auto const & spawn_msg{dynamic_cast<MessageSpawn &>(lastmsg)};
 		obj_list_.push_back(
 			dynamic_cast<GraphicObject *>(spawn_msg.sender()));

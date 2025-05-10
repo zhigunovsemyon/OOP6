@@ -12,11 +12,11 @@ public:
 	/*Возможные сообщения*/
 	enum class Type {
 		NIL,	   /*Пустое сообщение*/
-		MS_CLICK,  /*Клик мышью*/
-		KB_HIT,	   /*Нажатие на клавиатуру*/
-		OBJ_SPAWN, /*Появление нового объекта*/
-		//OBJ_CLEAR, /*Удаление объекта из списка*/
-		OBJ_DEL,   /*Поиск объекта для удаления*/
+		OBJ_CLICK, /*Клик мышью*/
+		OBJ_KBHIT, /*Нажатие на клавиатуру*/
+		OBJ_CLEAR, /*Удаление объекта из списка*/
+		PROG_SPAWN,/*Добавление нового объекта*/
+		PROG_DEL,  /*Поиск объекта для удаления*/
 		PROG_EXIT, /*Завершение работы*/
 		PROG_CHMOD /*Изменение режима работы программы*/
 	};
@@ -39,6 +39,11 @@ protected:
 	Type code_;
 };
 
+class MessageClear : public Message {
+public:
+	MessageClear() : Message{Message::Type::OBJ_CLEAR} {}
+};
+
 class MessageKeyboard : public Message {
 	SDL_Scancode kbcode_;
 
@@ -46,7 +51,7 @@ public:
 	SDL_Scancode kbcode() const { return kbcode_; }
 
 	MessageKeyboard(SDL_Scancode c)
-		: Message{Message::Type::KB_HIT}, kbcode_(c)
+		: Message{Message::Type::OBJ_KBHIT}, kbcode_(c)
 	{
 	}
 };
@@ -58,7 +63,7 @@ public:
 	Object * sender() const { return sender_; }
 
 	MessageSpawn(Object * ptr)
-		: Message{Message::Type::OBJ_SPAWN}, sender_(ptr)
+		: Message{Message::Type::PROG_SPAWN}, sender_(ptr)
 	{
 	}
 };
@@ -85,7 +90,7 @@ class MessageClick : public Message {
 
 public:
 	MessageClick(int x, int y)
-		: Message{Message::Type::MS_CLICK}, x_{x}, y_{y}
+		: Message{Message::Type::OBJ_CLICK}, x_{x}, y_{y}
 	{
 	}
 
@@ -99,7 +104,7 @@ class MessageDelete : public Message {
 
 public:
 	MessageDelete(int x, int y)
-		: Message{Message::Type::OBJ_DEL}, x_{x}, y_{y}
+		: Message{Message::Type::PROG_DEL}, x_{x}, y_{y}
 	{
 	}
 
