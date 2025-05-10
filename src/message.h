@@ -1,4 +1,5 @@
 #pragma once
+#include "interact.h"
 #include "obj.h"
 
 #include <SDL_keyboard.h>
@@ -15,7 +16,8 @@ public:
 		KB_HIT,	   /*Нажатие на клавиатуру*/
 		OBJ_SPAWN, /*Появление нового объекта*/
 		OBJ_DEL,   /*Удаление объекта*/
-		PROG_EXIT  /*Завершение работы*/
+		PROG_EXIT, /*Завершение работы*/
+		PROG_CHMOD /*Изменение режима работы программы*/
 	};
 
 	virtual ~Message() = default;
@@ -68,6 +70,18 @@ public:
 
 	MessageDelete(Object * ptr)
 		: Message{Message::Type::OBJ_DEL}, sender_(ptr)
+	{
+	}
+};
+
+class MessageChmod : public Message {
+	InteractBase::Type t_;
+
+public:
+	InteractBase::Type mode() const { return t_; }
+
+	MessageChmod(InteractBase::Type t)
+		: Message{Message::Type::PROG_CHMOD}, t_{t}
 	{
 	}
 };
