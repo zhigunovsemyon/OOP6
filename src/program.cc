@@ -1,4 +1,3 @@
-#include <SDL2/SDL_render.h>
 #include <algorithm>
 #include <cassert>
 #include <memory>
@@ -14,6 +13,11 @@
 #ifndef SDL_h_
 #include <SDL2/SDL.h>
 #endif // !SDL_h_
+
+#include <SDL_render.h>
+#ifndef SDL_render_h_
+#include <SDL2/SDL_render.h>
+#endif // !SDL_render_h_
 
 #include <SDL_ttf.h>
 #ifndef SDL_TTF_H_
