@@ -1,10 +1,10 @@
 #pragma once
 #include "obj.h"
 
-// #include <SDL_keyboard.h>
-// #ifndef SDL_keyboard_h_
-// #include <SDL2/SDL_keyboard.h>
-// #endif // !SDL_keyboard_h_
+#include <SDL_keyboard.h>
+#ifndef SDL_keyboard_h_
+#include <SDL2/SDL_keyboard.h>
+#endif // !SDL_keyboard_h_
 
 class Message {
 public:
@@ -12,7 +12,7 @@ public:
 	enum class Type {
 		NIL,	   /*Пустое сообщение*/
 		MS_CLICK,  /*Клик мышью*/
-		// KB_HIT,	   /*Нажатие на клавиатуру*/
+		KB_HIT,	   /*Нажатие на клавиатуру*/
 		OBJ_SPAWN, /*Появление нового объекта*/
 		OBJ_DEL,   /*Удаление объекта*/
 		PROG_EXIT  /*Завершение работы*/
@@ -36,17 +36,17 @@ protected:
 	Type code_;
 };
 
-// class MessageKeyboard : public Message {
-// 	SDL_Scancode kbcode_;
-//
-// public:
-// 	SDL_Scancode kbcode() const { return kbcode_; }
-//
-// 	MessageKeyboard(SDL_Scancode c)
-// 		: Message{Message::Type::KB_HIT}, kbcode_(c)
-// 	{
-// 	}
-// };
+class MessageKeyboard : public Message {
+	SDL_Scancode kbcode_;
+
+public:
+	SDL_Scancode kbcode() const { return kbcode_; }
+
+	MessageKeyboard(SDL_Scancode c)
+		: Message{Message::Type::KB_HIT}, kbcode_(c)
+	{
+	}
+};
 
 class MessageSpawn : public Message {
 	Object * sender_;
