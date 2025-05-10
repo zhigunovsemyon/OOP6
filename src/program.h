@@ -4,6 +4,7 @@
 #include <string_view>
 
 #include "graphic_obj.h"
+#include "interact.h"
 #include "message.h"
 #include "obj.h"
 
@@ -30,6 +31,12 @@
 
 class Program {
 private:
+	// friend class InteractBase;
+	InteractCreate creator_;
+	InteractDelete deleter_;
+	InteractMove mover_;
+	InteractBase *interactor_;
+	
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
 	static constexpr SDL_Point winsize_{640, 480};
 	static constexpr int frametime_{10};
@@ -44,8 +51,11 @@ private:
 	SDL_Renderer * rend_{};
 	SDL_Event event_{};
 
-	std::queue<Message> msg_list_{};
-	std::queue<GraphicObject *> obj_list_{};
+	/*Очередь сообщений*/
+	std::queue<Message *> msg_list_{};
+
+	/*Набор рисуемых объектов*/
+	std::vector<GraphicObject *> obj_list_{};
 
 	Program(); /*Конструктор программы. Выбрасывает исключения*/
 
@@ -72,7 +82,7 @@ public:
 	Program & operator()() { return run(); }
 
 	/*Метод получения сообщения из объектов для рассылки другим объектам*/
-	void send_msg(Message && msg) { msg_list_.push(std::move(msg)); }
+	void send_msg(Message * msg) { msg_list_.push(msg); }
 
 	/*Геттер/конструктор объекта программы*/
 	static Program & get();
