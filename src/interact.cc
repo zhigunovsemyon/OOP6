@@ -3,7 +3,10 @@
 
 void InteractMove::click(SDL_Point const &) {}
 
-void InteractDelete::click(SDL_Point const &) {}
+void InteractDelete::click(SDL_Point const & p)
+{
+	Program::get().send_msg(new MessageDelete{p.x, p.y});
+}
 
 void InteractResize::click(SDL_Point const &) {}
 

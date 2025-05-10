@@ -43,22 +43,35 @@ void Program::msg_handle_(bool & runs)
 	msg_list_.pop();
 
 	switch (lastmsg.code()) {
+	case Message::Type::OBJ_DEL: {
+		auto const & del_msg{dynamic_cast<MessageDelete &>(lastmsg)};
+		auto del_fn = [&](auto * o) {
+			if (o->covers({del_msg.x(), del_msg.y()})) {
+				std::erase(obj_list_, o);
+				delete o;
+			}
+		};
+		std::for_each(obj_list_.begin(), obj_list_.end(), del_fn);
+		break;
+	}
 	case Message::Type::MS_CLICK: {
 		auto const & click_msg{dynamic_cast<MessageClick &>(lastmsg)};
 		interactor_->click({click_msg.x(), click_msg.y()});
 		break;
 	}
 	case Message::Type::KB_HIT: {
-		auto const & click_msg{dynamic_cast<MessageKeyboard &>(lastmsg)};
-		interactor_->kb_press({click_msg.kbcode()});
+		auto const & kbhit_msg{
+			dynamic_cast<MessageKeyboard &>(lastmsg)};
+		interactor_->kb_press({kbhit_msg.kbcode()});
 		break;
 	}
 	case Message::Type::PROG_EXIT:
 		runs = false;
 		break;
 	case Message::Type::OBJ_SPAWN: {
-		auto const & spawn_msg {dynamic_cast<MessageSpawn&>(lastmsg)};
-		obj_list_.push_back(dynamic_cast<GraphicObject*>(spawn_msg.sender()));
+		auto const & spawn_msg{dynamic_cast<MessageSpawn &>(lastmsg)};
+		obj_list_.push_back(
+			dynamic_cast<GraphicObject *>(spawn_msg.sender()));
 		break;
 	}
 	case Message::Type::PROG_CHMOD: {
@@ -98,7 +111,7 @@ void Program::input_handle_()
 		if (SDL_WINDOWEVENT_CLOSE == event_.window.event)
 			send_msg(new MessageExit);
 		break;
-	case SDL_KEYUP:		
+	case SDL_KEYUP:
 		send_msg(new MessageKeyboard(event_.key.keysym.scancode));
 		break;
 
