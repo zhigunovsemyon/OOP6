@@ -35,6 +35,7 @@ private:
 	InteractCreate creator_;
 	InteractDelete deleter_;
 	InteractMove mover_;
+	InteractResize resizer_;
 	InteractBase basic_interactor_;
 	InteractBase *interactor_;
 	
