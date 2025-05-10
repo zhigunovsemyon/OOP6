@@ -19,9 +19,9 @@ public:
 		DELETER
 	};
 	virtual ~InteractBase() = default;
-	virtual void click(SDL_Point const &) = 0;
+	virtual void click(SDL_Point const &){};
 
-	virtual void kb_press(SDL_Scancode) const = 0;
+	virtual void kb_press(SDL_Scancode) const;
 
 	InteractBase::Type type() const { return t_; }
 
