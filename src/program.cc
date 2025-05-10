@@ -48,6 +48,11 @@ void Program::msg_handle_(bool & runs)
 		interactor_->click({click_msg.x(), click_msg.y()});
 		break;
 	}
+	case Message::Type::KB_HIT: {
+		auto const & click_msg{dynamic_cast<MessageKeyboard &>(lastmsg)};
+		interactor_->kb_press({click_msg.kbcode()});
+		break;
+	}
 	case Message::Type::PROG_EXIT:
 		runs = false;
 		break;
@@ -73,14 +78,8 @@ void Program::input_handle_()
 		if (SDL_WINDOWEVENT_CLOSE == event_.window.event)
 			send_msg(new MessageExit);
 		break;
-	case SDL_KEYUP:
-		// if (SDL_SCANCODE_E == event_.key.keysym.scancode && (KMOD_ALT
-		// & event_.key.keysym.mod))
-
-		if (SDL_SCANCODE_ESCAPE == event_.key.keysym.scancode)
-			send_msg(new MessageExit);
-		if (SDL_SCANCODE_Q == event_.key.keysym.scancode)
-			send_msg(new MessageExit);
+	case SDL_KEYUP:		
+		send_msg(new MessageKeyboard(event_.key.keysym.scancode));
 		break;
 
 	case SDL_MOUSEBUTTONUP:
@@ -222,7 +221,7 @@ Program::Program()
 		throw TTF_exception{str};
 	}
 
-	interactor_ = &creator_;
+	interactor_ = &basic_interactor_;
 }
 
 /*Геттер/конструктор объекта программы. Выкидывает исключение при неудачном
