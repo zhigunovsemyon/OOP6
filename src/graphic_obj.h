@@ -41,6 +41,8 @@ protected:
 public:
 	virtual void draw(SDL_Renderer *) const = 0;
 
+	virtual bool covers(SDL_Point const &) const = 0;
+
 	/*Местоположение объекта*/
-	SDL_Point const & pos() { return pos_; }
+	// SDL_Point const & pos() { return pos_; }
 };
