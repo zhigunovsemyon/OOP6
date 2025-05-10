@@ -3,12 +3,14 @@
 #include <cassert>
 #include <memory>
 
+#include "graphic_obj.h"
 #include "message.h"
 #include "program.h"
 #include "sdlexcept.h"
 #include "ttfexcept.h"
 
 #include <SDL.h>
+#include <stdexcept>
 #ifndef SDL_h_
 #include <SDL2/SDL.h>
 #endif // !SDL_h_
@@ -29,17 +31,32 @@ void Program::msg_handle_(bool & runs)
 		return;
 
 	/*Извлечение крайнего сообщения*/
-	auto & lastmsg = msg_list_.front();
+	if (msg_list_.front() == nullptr) {
+		msg_list_.pop();
+		throw std::runtime_error{"nullptr message"};
+	}
+	auto & lastmsg = *msg_list_.front();
+	msg_list_.pop();
 
 	switch (lastmsg.code()) {
+	case Message::Type::MS_CLICK: {
+		auto const & click_msg{dynamic_cast<MessageClick &>(lastmsg)};
+		interactor_->click({click_msg.x(), click_msg.y()});
+		break;
+	}
 	case Message::Type::PROG_EXIT:
 		runs = false;
 		break;
+	case Message::Type::OBJ_SPAWN: {
+		auto const & spawn_msg {dynamic_cast<MessageSpawn&>(lastmsg)};
+		obj_list_.push_back(dynamic_cast<GraphicObject*>(spawn_msg.sender()));
+		break;
+	}
 	default:
 		break;
 	}
 
-	msg_list_.pop();
+	delete &lastmsg;
 }
 
 /*Функция отрабатывает нажатия пользователя */
@@ -50,16 +67,22 @@ void Program::input_handle_()
 		break;
 	case SDL_WINDOWEVENT:
 		if (SDL_WINDOWEVENT_CLOSE == event_.window.event)
-			send_msg(Message{NULL, Message::Type::PROG_EXIT});
+			send_msg(new MessageExit);
 		break;
 	case SDL_KEYUP:
 		// if (SDL_SCANCODE_E == event_.key.keysym.scancode && (KMOD_ALT
 		// & event_.key.keysym.mod))
 
 		if (SDL_SCANCODE_ESCAPE == event_.key.keysym.scancode)
-			send_msg(Message{NULL, Message::Type::PROG_EXIT});
+			send_msg(new MessageExit);
 		if (SDL_SCANCODE_Q == event_.key.keysym.scancode)
-			send_msg(Message{NULL, Message::Type::PROG_EXIT});
+			send_msg(new MessageExit);
+		break;
+
+	case SDL_MOUSEBUTTONUP:
+		if (event_.button.button == SDL_BUTTON_LEFT)
+			send_msg(new MessageClick{event_.button.x,
+						  event_.button.y});
 		break;
 	}
 }
@@ -109,7 +132,10 @@ Program & Program::run()
 		if (DrawBackground_(rend_, &bgcolour_))
 			throw SDL_exception{};
 
-		draw_text("sample text", {});
+		auto rend_link = rend_;
+		std::for_each(
+			obj_list_.begin(), obj_list_.end(),
+			[&rend_link](auto const o) { o->draw(rend_link); });
 
 		SDL_RenderPresent(rend_); // Вывод его на экран
 		SDL_Delay(frametime_); // Задержка перед новым этапом отрисовки
@@ -121,6 +147,16 @@ Program & Program::run()
 /*Завершение работы программы*/
 Program::~Program()
 {
+	std::for_each(obj_list_.begin(), obj_list_.end(),
+		      [](auto * p) { delete p; });
+
+	/*Очистка остальной очереди сообщений*/
+	while (!msg_list_.empty()) {
+		auto * top = msg_list_.front();
+		delete top;
+		msg_list_.pop();
+	}
+
 	if (font_)
 		TTF_CloseFont(font_);
 
@@ -181,6 +217,8 @@ Program::Program()
 		SDL_Quit();
 		throw TTF_exception{str};
 	}
+
+	interactor_ = &creator_;
 }
 
 /*Геттер/конструктор объекта программы. Выкидывает исключение при неудачном
