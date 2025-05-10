@@ -53,7 +53,7 @@ void Circle::draw(SDL_Renderer * rend) const
 		throw SDL_exception{};
 }
 
-void Circle::recieve_msg(Message &&) {}
+void Circle::recieve_msg(Message *) {}
 	
 bool Circle::covers(SDL_Point const &point) const 
 {

@@ -13,5 +13,5 @@ protected:
 	void send_msg(Message *);
 
 	/*Интерфейс получения сообщения*/
-	virtual void recieve_msg(Message &&) = 0;
+	virtual void recieve_msg(Message *) = 0;
 };

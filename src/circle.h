@@ -6,7 +6,7 @@ class Circle : public GraphicObject {
 public:
 	bool covers(SDL_Point const &) const override;
 	void draw(SDL_Renderer *) const override;
-	void recieve_msg(Message &&) override;
+	void recieve_msg(Message *) override;
 
 	Circle(int x, int y) : GraphicObject{x, y}, radius_{default_radius_} {}
 
