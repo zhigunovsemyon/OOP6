@@ -9,10 +9,15 @@
 #include <SDL2/SDL_events.h>
 #endif // !SDL_events_h
 
+#include <SDL_ttf.h>
+#ifndef SDL_TTF_H_
+#include <SDL2/SDL_ttf.h>
+#endif // !SDL_TTF_H_
+//
 #include <SDL_render.h>
 #ifndef SDL_render_h_
 #include <SDL2/SDL_render.h>
-#endif
+#endif // !SDL_render_h_
 
 #include <SDL_video.h>
 #ifndef SDL_video_h_
@@ -28,7 +33,9 @@ private:
 	static constexpr SDL_Point winsize_{640, 480};
 	static constexpr int frametime_{10};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
+	static constexpr std::string_view FontLoc_{"assets/font.ttf"};
 
+	TTF_Font * font_{};
 	SDL_Window * win_{};
 	SDL_Renderer * rend_{};
 	SDL_Event event_{};

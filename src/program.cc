@@ -1,7 +1,7 @@
 #include "program.h"
+#include "message.h"
 #include "sdlexcept.h"
 #include "ttfexcept.h"
-#include "message.h"
 #include <cassert>
 
 #include <SDL.h>
@@ -90,6 +90,9 @@ Program & Program::run()
 /*Завершение работы программы*/
 Program::~Program()
 {
+	if (font_)
+		TTF_CloseFont(font_);
+
 	if (rend_)
 		SDL_DestroyRenderer(rend_);
 
@@ -119,7 +122,7 @@ Program::Program()
 	win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
 				SDL_WINDOW_SHOWN);
-	if (win_ == nullptr){
+	if (win_ == nullptr) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
 		TTF_Quit();
@@ -128,13 +131,23 @@ Program::Program()
 	}
 
 	rend_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
-	if (nullptr == rend_){
+	if (nullptr == rend_) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
 		SDL_DestroyWindow(win_);
 		TTF_Quit();
 		SDL_Quit();
 		throw SDL_exception{str};
+	}
+
+	if ((font_ = TTF_OpenFont(FontLoc_.data(), 10)) == nullptr) {
+		/*Сохранение строки для передачи в исключение.*/
+		auto str = SDL_GetError();
+		SDL_DestroyRenderer(rend_);
+		SDL_DestroyWindow(win_);
+		TTF_Quit();
+		SDL_Quit();
+		throw TTF_exception{str};
 	}
 }
 
