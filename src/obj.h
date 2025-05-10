@@ -10,7 +10,7 @@ protected:
 	virtual ~Object() = default;
 
 	/*Метод передачи сообщения инстансу программы*/
-	void send_msg(Message &&);
+	void send_msg(Message *);
 
 	/*Интерфейс получения сообщения*/
 	virtual void recieve_msg(Message &&) = 0;

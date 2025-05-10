@@ -30,15 +30,15 @@ protected:
 	GraphicObject(int pos_x, int pos_y)
 		: pos_{pos_x, pos_y}, selected_{false}
 	{
-		send_msg(Message{this, Message::Type::OBJ_SPAWN});
+		send_msg(new MessageSpawn{this});
 	}
+public:
 
 	~GraphicObject() override
 	{
-		send_msg(Message{this, Message::Type::OBJ_DEL});
+		send_msg(new MessageDelete{this});
 	}
 
-public:
 	virtual void draw(SDL_Renderer *) const = 0;
 
 	virtual bool covers(SDL_Point const &) const = 0;
