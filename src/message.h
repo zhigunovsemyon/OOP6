@@ -15,7 +15,8 @@ public:
 		MS_CLICK,  /*Клик мышью*/
 		KB_HIT,	   /*Нажатие на клавиатуру*/
 		OBJ_SPAWN, /*Появление нового объекта*/
-		OBJ_DEL,   /*Удаление объекта*/
+		//OBJ_CLEAR, /*Удаление объекта из списка*/
+		OBJ_DEL,   /*Поиск объекта для удаления*/
 		PROG_EXIT, /*Завершение работы*/
 		PROG_CHMOD /*Изменение режима работы программы*/
 	};
@@ -62,18 +63,6 @@ public:
 	}
 };
 
-class MessageDelete : public Message {
-	Object * sender_;
-
-public:
-	Object * sender() const { return sender_; }
-
-	MessageDelete(Object * ptr)
-		: Message{Message::Type::OBJ_DEL}, sender_(ptr)
-	{
-	}
-};
-
 class MessageChmod : public Message {
 	InteractBase::Type t_;
 
@@ -97,6 +86,20 @@ class MessageClick : public Message {
 public:
 	MessageClick(int x, int y)
 		: Message{Message::Type::MS_CLICK}, x_{x}, y_{y}
+	{
+	}
+
+	int x() const { return x_; }
+
+	int y() const { return y_; }
+};
+
+class MessageDelete : public Message {
+	int x_, y_;
+
+public:
+	MessageDelete(int x, int y)
+		: Message{Message::Type::OBJ_DEL}, x_{x}, y_{y}
 	{
 	}
 
