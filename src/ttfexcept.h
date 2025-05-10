@@ -4,5 +4,6 @@
 class TTF_exception : public std::runtime_error {
 public:
 	~TTF_exception() override;
-	TTF_exception();
+	TTF_exception() noexcept;
+	TTF_exception(const char *) noexcept;
 };
