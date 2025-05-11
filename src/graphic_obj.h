@@ -32,8 +32,10 @@ protected:
 	{
 		send_msg(new MessageSpawn{this});
 	}
+
+	virtual bool covers_(SDL_Point const &) const = 0;
+
 public:
 	virtual void draw(SDL_Renderer *) const = 0;
 
-	virtual bool covers(SDL_Point const &) const = 0;
 };

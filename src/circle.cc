@@ -55,7 +55,7 @@ void Circle::draw(SDL_Renderer * rend) const
 
 void Circle::recieve_msg(Message *) {}
 	
-bool Circle::covers(SDL_Point const &point) const 
+bool Circle::covers_(SDL_Point const &point) const 
 {
 	/*Не входит в ширину круга*/
 	if (point.x > pos_.x + radius_ || point.x < pos_.x - radius_)

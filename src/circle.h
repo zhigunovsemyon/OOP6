@@ -4,7 +4,6 @@
 
 class Circle : public GraphicObject {
 public:
-	bool covers(SDL_Point const &) const override;
 	void draw(SDL_Renderer *) const override;
 	void recieve_msg(Message *) override;
 
@@ -16,5 +15,9 @@ private:
 	constexpr static int default_radius_{64};
 	constexpr static int polycount_{18};
 
+
 	int radius_;
+
+protected:
+	bool covers_(SDL_Point const &) const override;
 };
