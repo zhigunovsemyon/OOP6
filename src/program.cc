@@ -1,15 +1,14 @@
 #include <algorithm>
 #include <cassert>
 #include <memory>
+#include <stdexcept>
 
 #include "graphic_obj.h"
 #include "message.h"
 #include "program.h"
 #include "sdlexcept.h"
-#include "ttfexcept.h"
 
 #include <SDL.h>
-#include <stdexcept>
 #ifndef SDL_h_
 #include <SDL2/SDL.h>
 #endif // !SDL_h_
