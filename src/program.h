@@ -34,6 +34,7 @@
 #include "circle.h"
 #include "graphic_factory.h"
 #include "rect.h"
+#include "triangle.h"
 #include "square.h"
 
 class Program {
@@ -52,8 +53,8 @@ private:
 	static constexpr int FontSize_{16};
 	static constexpr SDL_Colour TextCol_{0xFF, 0x00, 0x00, 0xFF};
 
-	std::array<GraphicBuilder *, 3> builders_{
-		new CircleBuilder, new SquareBuilder, new RectangleBuilder};
+	std::array<GraphicBuilder *, 4> builders_{
+		new CircleBuilder, new SquareBuilder, new RectangleBuilder, new TriangleBuilder};
 	GraphicFactory facc{builders_};
 
 	TTF_Font * font_{};
