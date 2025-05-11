@@ -32,7 +32,7 @@
 class Program {
 private:	
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
-	static constexpr SDL_Point winsize_{640, 480};
+	static constexpr SDL_Point winsize_{960, 600};
 	static constexpr int frametime_{10};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
 
