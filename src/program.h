@@ -62,11 +62,13 @@ private:
 	void input_handle_();
 
 	/*Обработка сообщений*/
-	void msg_handle_(bool & runs);
+	void msg_handle_();
 
 	~Program(); /*Деструктор программы*/
 
 	void draw_text(std::string_view, SDL_Point const & corner);
+
+	bool runs_ {true};
 
 public:
 	/*Удаление конструктора копирования*/

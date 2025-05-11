@@ -88,7 +88,7 @@ void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 
 #include "circle.h" //ttemp
 
-void Program::msg_handle_(bool & runs)
+void Program::msg_handle_()
 {
 	if (msg_list_.empty())
 		return;
@@ -119,7 +119,7 @@ void Program::msg_handle_(bool & runs)
 		break;
 	}
 	case Message::Type::PROG_EXIT:
-		runs = false;
+		runs_ = false;
 		break;
 	case Message::Type::ADDME: {
 		auto const & spawn_msg{dynamic_cast<MessageSpawn &>(lastmsg)};
@@ -137,25 +137,27 @@ void Program::msg_handle_(bool & runs)
 /*Диспетчер программы*/
 Program & Program::run()
 {
-	bool runs{true};
-	while (runs) { // Обработка событий
+	while (runs_) { 
+		/*Создание сообщений из событий ввода*/
 		while (SDL_PollEvent(&event_))
 			input_handle_();
 
-		msg_handle_(runs);
+		// Обработка событий объектами и программой
+		msg_handle_();
 
 		// Заливка фона, завершение работы если не удалось
 		if (DrawBackground_(rend_, &bgcolour_))
 			throw SDL_exception{};
 
+		/*Отрисовка каждого объекта*/
 		auto rend_link = rend_;
 		std::for_each(
 			obj_list_.begin(), obj_list_.end(),
 			[&rend_link](auto const o) { o->draw(rend_link); });
 
-		SDL_RenderPresent(rend_); // Вывод его на экран
+		// Вывод на экран
+		SDL_RenderPresent(rend_); 
 	}
-
 	return *this;
 }
 
