@@ -1,25 +1,25 @@
 #include "graphic_obj.h"
 #include "program.h"
 
-void GraphicObject::left_()
+void GraphicObject::left_() noexcept
 {
 	if (pos_.x > 0)
 		pos_.x -= step;
 }
 
-void GraphicObject::right_()
+void GraphicObject::right_() noexcept
 {
 	if (pos_.x < Program::winsize().x)
 		pos_.x += step;
 }
 
-void GraphicObject::down_()
+void GraphicObject::down_() noexcept
 {
 	if (pos_.y < Program::winsize().y)
 		pos_.y += step;
 }
 
-void GraphicObject::up_()
+void GraphicObject::up_() noexcept
 {
 	if (pos_.y > 0)
 		pos_.y -= step;

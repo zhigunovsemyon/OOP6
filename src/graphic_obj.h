@@ -34,22 +34,22 @@ protected:
 		send_msg(new MessageSpawn{this});
 	}
 
-	virtual bool covers_(SDL_Point const &) const = 0;
+	virtual bool covers_(SDL_Point const &) const noexcept = 0;
 
-	void left_();
+	void left_() noexcept ;
 
-	void right_();
+	void right_() noexcept ;
 
-	void down_();
+	void down_() noexcept ;
 
-	void up_();
+	void up_() noexcept ;
 
-	virtual void bigger_() = 0;
-	virtual void smaller_() = 0;
-	virtual void taller_() = 0;
-	virtual void wider_() = 0;
-	virtual void narrower_() = 0;
-	virtual void lower_() = 0;
+	virtual void bigger_()  noexcept = 0;
+	virtual void smaller_()  noexcept = 0;
+	virtual void taller_()  noexcept = 0;
+	virtual void wider_()  noexcept = 0;
+	virtual void narrower_() noexcept  = 0;
+	virtual void lower_()  noexcept = 0;
 
 public:
 	virtual void recieve_msg(Message *) override;
