@@ -22,6 +22,9 @@ protected:
 	/*Цвет выделенного объекта*/
 	static constexpr SDL_Colour sel_colour{0, 0xFF, 0, 0xFF};
 
+	/*Текущий цвет*/
+	auto  cur_colour() const noexcept {return selected_ ? sel_colour : def_colour;}
+
 	/*Координаты центра объекта*/
 	SDL_Point pos_;
 

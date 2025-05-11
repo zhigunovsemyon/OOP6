@@ -64,8 +64,8 @@ void CircleBase::smaller_() noexcept
 
 void CircleBase::draw(SDL_Renderer * rend) const
 {
-	SDL_Colour const * used_col = &((selected_) ? sel_colour : def_colour);
-	if (DrawCircle(rend, radius_, pos_, used_col, polycount_))
+	auto const used_col {cur_colour()};
+	if (DrawCircle(rend, radius_, pos_, &used_col, polycount_))
 		throw SDL_exception{};
 }
 
