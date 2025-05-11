@@ -71,7 +71,7 @@ static int DrawBackground_(SDL_Renderer * rend, SDL_Colour const * col)
 	return 0;
 }
 
-void Program::draw_text(std::string_view txt, SDL_Point const & corner)
+/*void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 {
 	auto surf{TTF_RenderUTF8_LCD(font_, txt.data(), TextCol_, bgcolour_)};
 	if (!surf)
@@ -89,7 +89,7 @@ void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 		SDL_FreeSurface(surf);
 		throw SDL_exception{};
 	}
-}
+}*/
 
 void Program::msg_handle_()
 {

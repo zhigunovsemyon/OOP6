@@ -1,11 +1,11 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <forward_list>
 #include <queue>
 #include <string_view>
 #include <utility>
-#include <algorithm>
 
 #include "graphic_obj.h"
 #include "message.h"
@@ -32,8 +32,9 @@
 #endif // !SDL_video_h_
 
 #include "circle.h"
-#include "square.h"
 #include "graphic_factory.h"
+#include "rect.h"
+#include "square.h"
 
 class Program {
 private:
@@ -51,8 +52,9 @@ private:
 	static constexpr int FontSize_{16};
 	static constexpr SDL_Colour TextCol_{0xFF, 0x00, 0x00, 0xFF};
 
-	std::array<GraphicBuilder *, 2> builders_ {new CircleBuilder, new SquareBuilder};
-	GraphicFactory facc {builders_};
+	std::array<GraphicBuilder *, 3> builders_{
+		new CircleBuilder, new SquareBuilder, new RectangleBuilder};
+	GraphicFactory facc{builders_};
 
 	TTF_Font * font_{};
 	SDL_Window * win_{};
@@ -75,7 +77,7 @@ private:
 
 	~Program(); /*Деструктор программы*/
 
-	void draw_text(std::string_view, SDL_Point const & corner);
+	// void draw_text(std::string_view, SDL_Point const & corner);
 
 	bool runs_{true};
 
