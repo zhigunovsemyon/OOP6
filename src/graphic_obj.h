@@ -44,6 +44,13 @@ protected:
 
 	void up_();
 
+	virtual void bigger_() = 0;
+	virtual void smaller_() = 0;
+	virtual void taller_() = 0;
+	virtual void wider_() = 0;
+	virtual void narrower_() = 0;
+	virtual void lower_() = 0;
+
 public:
 	virtual void recieve_msg(Message *) override;
 

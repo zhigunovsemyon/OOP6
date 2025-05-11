@@ -45,6 +45,24 @@ void GraphicObject::recieve_msg(Message * msg)
 		case SDL_SCANCODE_RIGHT:
 			right_();
 			break;
+		case SDL_SCANCODE_MINUS:
+			smaller_();
+			break;
+		case SDL_SCANCODE_EQUALS:
+			bigger_();
+			break;
+		case SDL_SCANCODE_T:
+			taller_();
+			break;
+		case SDL_SCANCODE_N:
+			narrower_();
+			break;
+		case SDL_SCANCODE_L:
+			lower_();
+			break;
+		case SDL_SCANCODE_W:
+			wider_();
+			break;
 		case SDL_SCANCODE_ESCAPE:
 			selected_ = false;
 			send_msg(new MessageClear{this});
