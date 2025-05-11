@@ -30,8 +30,6 @@ void GraphicObject::recieve_msg(Message * msg)
 	switch (msg->code()) {
 	case Message::Type::KB_HIT: {
 		auto const & kb_msg{dynamic_cast<MessageKeyboard &>(*msg)};
-		if (kb_msg.kbcode() == SDL_SCANCODE_Q)
-			send_msg(new MessageExit);
 		if (!selected_)
 			break;
 		switch (kb_msg.kbcode()) {
@@ -46,6 +44,10 @@ void GraphicObject::recieve_msg(Message * msg)
 			break;
 		case SDL_SCANCODE_RIGHT:
 			right_();
+			break;
+		case SDL_SCANCODE_ESCAPE:
+			selected_ = false;
+			send_msg(new MessageClear{this});
 			break;
 		default:
 			break;

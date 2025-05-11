@@ -39,6 +39,8 @@ void Program::input_handle_()
 			send_msg(new MessageExit);
 		break;
 	case SDL_KEYUP:
+		if (event_.key.keysym.scancode == SDL_SCANCODE_Q)
+			send_msg(new MessageExit);
 		send_msg(new MessageKeyboard(event_.key.keysym.scancode));
 		break;
 
