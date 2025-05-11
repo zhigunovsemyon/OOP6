@@ -47,10 +47,10 @@ void Program::input_handle_()
 	case SDL_MOUSEBUTTONUP:
 		if (event_.button.button == SDL_BUTTON_RIGHT)
 			send_msg(new MessageRClick{event_.button.x,
-						  event_.button.y});
+						   event_.button.y});
 		if (event_.button.button == SDL_BUTTON_LEFT)
 			send_msg(new MessageLClick{event_.button.x,
-						  event_.button.y});
+						   event_.button.y});
 		break;
 	}
 }
@@ -87,6 +87,7 @@ void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 }
 
 #include "circle.h" //ttemp
+
 void Program::msg_handle_(bool & runs)
 {
 	if (msg_list_.empty())
@@ -107,7 +108,7 @@ void Program::msg_handle_(bool & runs)
 	switch (lastmsg.code()) {
 	case Message::Type::DELME: {
 		auto * o = dynamic_cast<MessageDelete &>(lastmsg).sender();
-		obj_list_.remove(&dynamic_cast<GraphicObject&>(*o));
+		obj_list_.remove(&dynamic_cast<GraphicObject &>(*o));
 		delete o;
 		break;
 	}
@@ -132,6 +133,7 @@ void Program::msg_handle_(bool & runs)
 
 	delete &lastmsg;
 }
+
 /*Диспетчер программы*/
 Program & Program::run()
 {
@@ -152,7 +154,6 @@ Program & Program::run()
 			[&rend_link](auto const o) { o->draw(rend_link); });
 
 		SDL_RenderPresent(rend_); // Вывод его на экран
-		SDL_Delay(frametime_); // Задержка перед новым этапом отрисовки
 	}
 
 	return *this;
@@ -211,7 +212,8 @@ Program::Program()
 		throw SDL_exception{str};
 	}
 
-	rend_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
+	rend_ = SDL_CreateRenderer(
+		win_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (nullptr == rend_) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
