@@ -3,6 +3,7 @@
 #include <queue>
 #include <string_view>
 #include <utility>
+#include <forward_list>
 
 #include "graphic_obj.h"
 #include "interact.h"
@@ -61,7 +62,7 @@ private:
 	std::queue<Message *> msg_list_{};
 
 	/*Набор рисуемых объектов*/
-	std::vector<GraphicObject *> obj_list_{};
+	std::forward_list<GraphicObject *> obj_list_{};
 
 	Program(); /*Конструктор программы. Выбрасывает исключения*/
 

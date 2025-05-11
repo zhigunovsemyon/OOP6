@@ -29,78 +29,6 @@
 #include <SDL2/SDL_surface.h>
 #endif // !SDL_surface_h_
 
-void Program::msg_handle_(bool & runs)
-{
-	if (msg_list_.empty())
-		return;
-
-	/*Извлечение крайнего сообщения*/
-	if (msg_list_.front() == nullptr) {
-		msg_list_.pop();
-		throw std::runtime_error{"nullptr message"};
-	}
-	auto & lastmsg = *msg_list_.front();
-	msg_list_.pop();
-
-	switch (lastmsg.code()) {
-	case Message::Type::PROG_DEL: {
-		auto const & del_msg{dynamic_cast<MessageDelete &>(lastmsg)};
-		auto del_fn = [&](auto * o) {
-			if (o->covers({del_msg.x(), del_msg.y()})) {
-				std::erase(obj_list_, o);
-				delete o;
-			}
-		};
-		std::for_each(obj_list_.begin(), obj_list_.end(), del_fn);
-		break;
-	}
-	case Message::Type::OBJ_CLICK: {
-		auto const & click_msg{dynamic_cast<MessageClick &>(lastmsg)};
-		interactor_->click({click_msg.x(), click_msg.y()});
-		break;
-	}
-	case Message::Type::OBJ_KBHIT: {
-		auto const & kbhit_msg{
-			dynamic_cast<MessageKeyboard &>(lastmsg)};
-		interactor_->kb_press({kbhit_msg.kbcode()});
-		break;
-	}
-	case Message::Type::PROG_EXIT:
-		runs = false;
-		break;
-	case Message::Type::PROG_SPAWN: {
-		auto const & spawn_msg{dynamic_cast<MessageSpawn &>(lastmsg)};
-		obj_list_.push_back(
-			dynamic_cast<GraphicObject *>(spawn_msg.sender()));
-		break;
-	}
-	case Message::Type::PROG_CHMOD: {
-		switch (dynamic_cast<MessageChmod &>(lastmsg).mode()) {
-		case InteractBase::type():
-			interactor_ = &basic_interactor_;
-			break;
-		case InteractDelete::type():
-			interactor_ = &deleter_;
-			break;
-		case InteractCreate::type():
-			interactor_ = &creator_;
-			break;
-		case InteractResize::type():
-			interactor_ = &resizer_;
-			break;
-		case InteractMove::type():
-			interactor_ = &mover_;
-			break;
-		}
-		break;
-	}
-	default:
-		break;
-	}
-
-	delete &lastmsg;
-}
-
 /*Функция отрабатывает нажатия пользователя */
 void Program::input_handle_()
 {
@@ -154,6 +82,81 @@ void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 	}
 }
 
+
+void Program::msg_handle_(bool & runs)
+{
+	if (msg_list_.empty())
+		return;
+
+	/*Извлечение крайнего сообщения*/
+	if (msg_list_.front() == nullptr) {
+		msg_list_.pop();
+		throw std::runtime_error{"nullptr message"};
+	}
+	auto & lastmsg = *msg_list_.front();
+	msg_list_.pop();
+
+	switch (lastmsg.code()) {
+	case Message::Type::PROG_DEL: {
+		auto const & del_msg{dynamic_cast<MessageDelete &>(lastmsg)};
+		/*obj_list_.remove_if([&del_msg](auto const * o) {
+			return o->covers({del_msg.x(), del_msg.y()});
+		});*/
+		auto del_fn = [&](auto * o) {
+			if (o->covers({del_msg.x(), del_msg.y()})) {
+				std::erase(obj_list_, o);
+				delete o;
+			}
+		};
+		std::for_each(obj_list_.begin(), obj_list_.end(), del_fn);
+		break;
+	}
+	case Message::Type::OBJ_CLICK: {
+		auto const & click_msg{dynamic_cast<MessageClick &>(lastmsg)};
+		interactor_->click({click_msg.x(), click_msg.y()});
+		break;
+	}
+	case Message::Type::OBJ_KBHIT: {
+		auto const & kbhit_msg{
+			dynamic_cast<MessageKeyboard &>(lastmsg)};
+		interactor_->kb_press(kbhit_msg.kbcode());
+		break;
+	}
+	case Message::Type::PROG_EXIT:
+		runs = false;
+		break;
+	case Message::Type::PROG_SPAWN: {
+		auto const & spawn_msg{dynamic_cast<MessageSpawn &>(lastmsg)};
+		obj_list_.push_front(
+			dynamic_cast<GraphicObject *>(spawn_msg.sender()));
+		break;
+	}
+	case Message::Type::PROG_CHMOD: {
+		switch (dynamic_cast<MessageChmod &>(lastmsg).mode()) {
+		case InteractBase::type():
+			interactor_ = &basic_interactor_;
+			break;
+		case InteractDelete::type():
+			interactor_ = &deleter_;
+			break;
+		case InteractCreate::type():
+			interactor_ = &creator_;
+			break;
+		case InteractResize::type():
+			interactor_ = &resizer_;
+			break;
+		case InteractMove::type():
+			interactor_ = &mover_;
+			break;
+		}
+		break;
+	}
+	default:
+		break;
+	}
+
+	delete &lastmsg;
+}
 /*Диспетчер программы*/
 Program & Program::run()
 {
