@@ -7,12 +7,14 @@ class Object {
 private:
 
 protected:
-	virtual ~Object() = default;
+	Object() = default;
 
 	/*Метод передачи сообщения инстансу программы*/
 	void send_msg(Message *);
 
 public:
+	virtual ~Object() = default;
+
 	/*Интерфейс получения сообщения*/
 	virtual void recieve_msg(Message *) = 0;
 };
