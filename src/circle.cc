@@ -1,4 +1,5 @@
 #include "circle.h"
+#include "program.h"
 #include "sdlexcept.h"
 
 /*Рисование круга рисовальщиком rend, радиуса rad, c центром в pos, цвета col,
@@ -46,6 +47,21 @@ static int DrawCircle(SDL_Renderer * rend,
 	return 0;
 }
 
+void Circle::bigger_() noexcept
+{
+	constexpr auto maxsize =
+		std::min(Program::winsize().y, Program::winsize().x) - step;
+
+	if (radius_ * 2 < maxsize)
+		radius_ += step;
+}
+
+void Circle::smaller_() noexcept
+{
+	if (radius_ > step * 2)
+		radius_ -= step;
+}
+
 void Circle::draw(SDL_Renderer * rend) const
 {
 	SDL_Colour const * used_col = &((selected_) ? sel_colour : def_colour);
@@ -53,9 +69,7 @@ void Circle::draw(SDL_Renderer * rend) const
 		throw SDL_exception{};
 }
 
-
-	
-bool Circle::covers_(SDL_Point const &point) const 
+bool Circle::covers_(SDL_Point const & point) const noexcept
 {
 	/*Не входит в ширину круга*/
 	if (point.x > pos_.x + radius_ || point.x < pos_.x - radius_)
@@ -64,6 +78,6 @@ bool Circle::covers_(SDL_Point const &point) const
 	/*Не входит в высоту круга*/
 	if (point.y > pos_.y + radius_ || point.y < pos_.y - radius_)
 		return false;
-	
+
 	return true;
 }
