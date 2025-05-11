@@ -16,6 +16,7 @@ class GraphicObject : public Object {
 private:
 
 protected:
+	static constexpr int step{7};
 	/*Стандартный цвет объекта*/
 	static constexpr SDL_Colour def_colour{0xFF, 0, 0, 0xFF};
 	/*Цвет выделенного объекта*/
@@ -35,7 +36,14 @@ protected:
 
 	virtual bool covers_(SDL_Point const &) const = 0;
 
+	void left_();
+
+	void right_();
+
+	void down_();
+
+	void up_();
+
 public:
 	virtual void draw(SDL_Renderer *) const = 0;
-
 };
