@@ -53,59 +53,7 @@ void Circle::draw(SDL_Renderer * rend) const
 		throw SDL_exception{};
 }
 
-void Circle::recieve_msg(Message * msg) {
-	switch (msg->code()) {
-	case Message::Type::KB_HIT: {
-		auto const & kb_msg{dynamic_cast<MessageKeyboard &>(*msg)};
-		if (kb_msg.kbcode() == SDL_SCANCODE_Q)
-			send_msg(new MessageExit);
-		if (!selected_)
-			break;
-		switch (kb_msg.kbcode()) {
-		case SDL_SCANCODE_UP:
-			up_();
-			break;
-		case SDL_SCANCODE_DOWN:
-			down_();
-			break;
-		case SDL_SCANCODE_LEFT:
-			left_();
-			break;
-		case SDL_SCANCODE_RIGHT:
-			right_();
-			break;
-		default:
-			break;
-		}
-		msg->clear();
-		break;
-	}
-	case Message::Type::LCLICK: {
-		auto const & click_msg{dynamic_cast<MessageLClick &>(*msg)};
-		if (covers_({click_msg.x(), click_msg.y()})) {
-			selected_ = !selected_;
-			send_msg(new MessageClear{this});
-			msg->clear();
-		}
-		break;
-	}
-	case Message::Type::RCLICK: {
-		auto const & click_msg{dynamic_cast<MessageRClick &>(*msg)};
-		if (covers_({click_msg.x(), click_msg.y()})) {
-			send_msg(new MessageDelete{this});
-			msg->clear();
-		}
-		break;
-	}
-	case Message::Type::DESELECT: {
-		if (this != dynamic_cast<MessageClear &>(*msg).sender())
-			selected_ = false;
-		break;
-	}
-	default:
-		break;
-	}
-}
+
 	
 bool Circle::covers_(SDL_Point const &point) const 
 {

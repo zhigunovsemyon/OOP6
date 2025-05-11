@@ -45,5 +45,7 @@ protected:
 	void up_();
 
 public:
+	virtual void recieve_msg(Message *) override;
+
 	virtual void draw(SDL_Renderer *) const = 0;
 };
