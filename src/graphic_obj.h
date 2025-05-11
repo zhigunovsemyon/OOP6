@@ -14,7 +14,7 @@
 
 class GraphicObject : public Object {
 private:
-
+	
 protected:
 	static constexpr int step{7};
 	/*Стандартный цвет объекта*/
@@ -36,23 +36,29 @@ protected:
 
 	virtual bool covers_(SDL_Point const &) const noexcept = 0;
 
-	void left_() noexcept ;
+	void left_() noexcept;
 
-	void right_() noexcept ;
+	void right_() noexcept;
 
-	void down_() noexcept ;
+	void down_() noexcept;
 
-	void up_() noexcept ;
+	void up_() noexcept;
 
-	virtual void bigger_()  noexcept = 0;
-	virtual void smaller_()  noexcept = 0;
-	virtual void taller_()  noexcept = 0;
-	virtual void wider_()  noexcept = 0;
-	virtual void narrower_() noexcept  = 0;
-	virtual void lower_()  noexcept = 0;
+	virtual void bigger_() noexcept = 0;
+	virtual void smaller_() noexcept = 0;
+	virtual void taller_() noexcept = 0;
+	virtual void wider_() noexcept = 0;
+	virtual void narrower_() noexcept = 0;
+	virtual void lower_() noexcept = 0;
 
 public:
 	virtual void recieve_msg(Message *) override;
 
 	virtual void draw(SDL_Renderer *) const = 0;
+};
+
+class GraphicBuilder {
+public:
+	virtual ~GraphicBuilder() = default;
+	virtual GraphicObject * create(int x, int y) = 0;
 };

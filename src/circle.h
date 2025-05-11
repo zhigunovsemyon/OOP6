@@ -37,8 +37,16 @@ protected:
 };
 
 class Circle : public CircleBase {
+	friend class CircleBuilder;
 	static constexpr int polycount_{20};
 
-public:
 	Circle(int x, int y) : CircleBase{x, y, polycount_} {}
+};
+
+class CircleBuilder : public GraphicBuilder {
+public:
+	GraphicObject * create(int x, int y) override
+	{
+		return new Circle(x, y);
+	}
 };

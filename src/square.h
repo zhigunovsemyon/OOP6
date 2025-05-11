@@ -2,7 +2,16 @@
 #include "circle.h"
 
 class Square : public CircleBase {
+	friend class SquareBuilder;
 	constexpr static int polycount_{4};
-public:
+
 	Square(int x, int y) : CircleBase{x, y, polycount_} {}
+};
+
+class SquareBuilder : public GraphicBuilder {
+public:
+	GraphicObject * create(int x, int y) override
+	{
+		return new Square {x,y};
+	}
 };

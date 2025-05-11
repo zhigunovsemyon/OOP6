@@ -115,7 +115,7 @@ void Program::msg_handle_()
 	/*Если ни один из объектов не перехватил нажатие раннее:*/
 	case Message::Type::LCLICK: {
 		auto const & click_msg{dynamic_cast<MessageLClick &>(lastmsg)};
-		new Square{click_msg.x(), click_msg.y()};
+		SquareBuilder{}.create(click_msg.x(), click_msg.y());
 		break;
 	}
 	case Message::Type::PROG_EXIT:
