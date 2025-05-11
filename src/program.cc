@@ -43,8 +43,11 @@ void Program::input_handle_()
 		break;
 
 	case SDL_MOUSEBUTTONUP:
+		if (event_.button.button == SDL_BUTTON_RIGHT)
+			send_msg(new MessageRClick{event_.button.x,
+						  event_.button.y});
 		if (event_.button.button == SDL_BUTTON_LEFT)
-			send_msg(new MessageClick{event_.button.x,
+			send_msg(new MessageLClick{event_.button.x,
 						  event_.button.y});
 		break;
 	}
@@ -81,7 +84,7 @@ void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 	}
 }
 
-
+#include "circle.h" //ttemp
 void Program::msg_handle_(bool & runs)
 {
 	if (msg_list_.empty())
@@ -100,58 +103,25 @@ void Program::msg_handle_(bool & runs)
 		      [&lastmsg](auto * o) { o->recieve_msg(&lastmsg); });
 
 	switch (lastmsg.code()) {
-	case Message::Type::PROG_DEL: {
-		auto const & del_msg{dynamic_cast<MessageDelete &>(lastmsg)};
-		/*obj_list_.remove_if([&del_msg](auto const * o) {
-			return o->covers({del_msg.x(), del_msg.y()});
-		});*/
-		/*auto del_fn = [&](auto * o) {
-			if (o->covers({del_msg.x(), del_msg.y()})) {
-				std::erase(obj_list_, o);
-				delete o;
-			}
-		};
-		std::for_each(obj_list_.begin(), obj_list_.end(), del_fn);*/
+	case Message::Type::DELME: {
+		auto * o = dynamic_cast<MessageDelete &>(lastmsg).sender();
+		obj_list_.remove(&dynamic_cast<GraphicObject&>(*o));
+		delete o;
 		break;
 	}
-	case Message::Type::OBJ_CLICK: {
-		auto const & click_msg{dynamic_cast<MessageClick &>(lastmsg)};
-		interactor_->click({click_msg.x(), click_msg.y()});
-		break;
-	}
-	case Message::Type::OBJ_KBHIT: {
-		auto const & kbhit_msg{
-			dynamic_cast<MessageKeyboard &>(lastmsg)};
-		interactor_->kb_press(kbhit_msg.kbcode());
+	/*Если ни один из объектов не перехватил нажатие раннее:*/
+	case Message::Type::LCLICK: {
+		auto const & click_msg{dynamic_cast<MessageLClick &>(lastmsg)};
+		new Circle{click_msg.x(), click_msg.y()};
 		break;
 	}
 	case Message::Type::PROG_EXIT:
 		runs = false;
 		break;
-	case Message::Type::PROG_SPAWN: {
+	case Message::Type::ADDME: {
 		auto const & spawn_msg{dynamic_cast<MessageSpawn &>(lastmsg)};
 		obj_list_.push_front(
 			dynamic_cast<GraphicObject *>(spawn_msg.sender()));
-		break;
-	}
-	case Message::Type::PROG_CHMOD: {
-		switch (dynamic_cast<MessageChmod &>(lastmsg).mode()) {
-		case InteractBase::type():
-			interactor_ = &basic_interactor_;
-			break;
-		case InteractDelete::type():
-			interactor_ = &deleter_;
-			break;
-		case InteractCreate::type():
-			interactor_ = &creator_;
-			break;
-		case InteractResize::type():
-			interactor_ = &resizer_;
-			break;
-		case InteractMove::type():
-			interactor_ = &mover_;
-			break;
-		}
 		break;
 	}
 	default:
@@ -259,8 +229,6 @@ Program::Program()
 		SDL_Quit();
 		throw TTF_exception{str};
 	}
-
-	interactor_ = &basic_interactor_;
 }
 
 /*Геттер/конструктор объекта программы. Выкидывает исключение при неудачном

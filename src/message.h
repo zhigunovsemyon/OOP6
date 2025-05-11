@@ -1,5 +1,4 @@
 #pragma once
-#include "interact.h"
 #include "obj.h"
 
 #include <SDL_keyboard.h>
@@ -12,13 +11,13 @@ public:
 	/*Возможные сообщения*/
 	enum class Type {
 		NIL,	   /*Пустое сообщение*/
-		OBJ_CLICK, /*Клик мышью*/
-		OBJ_KBHIT, /*Нажатие на клавиатуру*/
-		OBJ_CLEAR, /*Удаление объекта из списка*/
-		PROG_SPAWN,/*Добавление нового объекта*/
-		PROG_DEL,  /*Поиск объекта для удаления*/
+		LCLICK,	   /*Клик ЛКМ*/
+		RCLICK,	   /*Клик ПКМ*/
+		KB_HIT,	   /*Нажатие на клавиатуру*/
+		DESELECT,  /*Удаление объекта из списка*/
+		ADDME,	   /*Добавление нового объекта*/
+		DELME,	   /*Удаление объекта*/
 		PROG_EXIT, /*Завершение работы*/
-		PROG_CHMOD /*Изменение режима работы программы*/
 	};
 
 	virtual ~Message() = default;
@@ -45,7 +44,7 @@ public:
 	Object * sender() const { return sender_; }
 
 	MessageClear(Object * ptr)
-		: Message{Message::Type::OBJ_CLEAR}, sender_{ptr}
+		: Message{Message::Type::DESELECT}, sender_{ptr}
 	{
 	}
 };
@@ -57,7 +56,7 @@ public:
 	SDL_Scancode kbcode() const { return kbcode_; }
 
 	MessageKeyboard(SDL_Scancode c)
-		: Message{Message::Type::OBJ_KBHIT}, kbcode_(c)
+		: Message{Message::Type::KB_HIT}, kbcode_(c)
 	{
 	}
 };
@@ -69,19 +68,7 @@ public:
 	Object * sender() const { return sender_; }
 
 	MessageSpawn(Object * ptr)
-		: Message{Message::Type::PROG_SPAWN}, sender_(ptr)
-	{
-	}
-};
-
-class MessageChmod : public Message {
-	InteractBase::Type t_;
-
-public:
-	InteractBase::Type mode() const { return t_; }
-
-	MessageChmod(InteractBase::Type t)
-		: Message{Message::Type::PROG_CHMOD}, t_{t}
+		: Message{Message::Type::ADDME}, sender_(ptr)
 	{
 	}
 };
@@ -91,12 +78,26 @@ public:
 	MessageExit() : Message{Message::Type::PROG_EXIT} {}
 };
 
-class MessageClick : public Message {
+class MessageLClick : public Message {
 	int x_, y_;
 
 public:
-	MessageClick(int x, int y)
-		: Message{Message::Type::OBJ_CLICK}, x_{x}, y_{y}
+	MessageLClick(int x, int y)
+		: Message{Message::Type::LCLICK}, x_{x}, y_{y}
+	{
+	}
+
+	int x() const { return x_; }
+
+	int y() const { return y_; }
+};
+
+class MessageRClick : public Message {
+	int x_, y_;
+
+public:
+	MessageRClick(int x, int y)
+		: Message{Message::Type::RCLICK}, x_{x}, y_{y}
 	{
 	}
 
@@ -106,15 +107,13 @@ public:
 };
 
 class MessageDelete : public Message {
-	int x_, y_;
+	Object * sender_;
 
 public:
-	MessageDelete(int x, int y)
-		: Message{Message::Type::PROG_DEL}, x_{x}, y_{y}
+	Object * sender() const { return sender_; }
+
+	MessageDelete(Object * ptr)
+		: Message{Message::Type::DELME}, sender_(ptr)
 	{
 	}
-
-	int x() const { return x_; }
-
-	int y() const { return y_; }
 };

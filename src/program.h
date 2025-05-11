@@ -6,7 +6,6 @@
 #include <forward_list>
 
 #include "graphic_obj.h"
-#include "interact.h"
 #include "message.h"
 #include "obj.h"
 
@@ -31,15 +30,7 @@
 #endif // !SDL_video_h_
 
 class Program {
-private:
-	// friend class InteractBase;
-	InteractCreate creator_;
-	InteractDelete deleter_;
-	InteractMove mover_;
-	InteractResize resizer_;
-	InteractBase basic_interactor_;
-	InteractBase *interactor_;
-	
+private:	
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
 	static constexpr SDL_Point winsize_{640, 480};
 	static constexpr int frametime_{10};
