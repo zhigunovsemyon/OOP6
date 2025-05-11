@@ -96,19 +96,23 @@ void Program::msg_handle_(bool & runs)
 	auto & lastmsg = *msg_list_.front();
 	msg_list_.pop();
 
+	/*Рассылка сообщения по объектам*/
+	std::for_each(obj_list_.begin(), obj_list_.end(),
+		      [&lastmsg](auto * o) { o->recieve_msg(&lastmsg); });
+
 	switch (lastmsg.code()) {
 	case Message::Type::PROG_DEL: {
 		auto const & del_msg{dynamic_cast<MessageDelete &>(lastmsg)};
 		/*obj_list_.remove_if([&del_msg](auto const * o) {
 			return o->covers({del_msg.x(), del_msg.y()});
 		});*/
-		auto del_fn = [&](auto * o) {
+		/*auto del_fn = [&](auto * o) {
 			if (o->covers({del_msg.x(), del_msg.y()})) {
 				std::erase(obj_list_, o);
 				delete o;
 			}
 		};
-		std::for_each(obj_list_.begin(), obj_list_.end(), del_fn);
+		std::for_each(obj_list_.begin(), obj_list_.end(), del_fn);*/
 		break;
 	}
 	case Message::Type::OBJ_CLICK: {

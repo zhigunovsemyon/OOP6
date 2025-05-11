@@ -53,7 +53,26 @@ void Circle::draw(SDL_Renderer * rend) const
 		throw SDL_exception{};
 }
 
-void Circle::recieve_msg(Message *) {}
+void Circle::recieve_msg(Message * msg) {
+	switch (msg->code()) {
+	case Message::Type::OBJ_CLICK: {
+		auto const & click_msg{dynamic_cast<MessageClick &>(*msg)};
+		if (covers_({click_msg.x(), click_msg.y()})) {
+			selected_ = !selected_;
+			send_msg(new MessageClear{this});
+			msg->clear();
+		}
+		break;
+	}
+	case Message::Type::OBJ_CLEAR: {
+		if (this != dynamic_cast<MessageClear &>(*msg).sender())
+			selected_ = false;
+		break;
+	}
+	default:
+		break;
+	}
+}
 	
 bool Circle::covers_(SDL_Point const &point) const 
 {

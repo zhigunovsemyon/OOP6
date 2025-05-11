@@ -40,8 +40,14 @@ protected:
 };
 
 class MessageClear : public Message {
+	Object * sender_;
 public:
-	MessageClear() : Message{Message::Type::OBJ_CLEAR} {}
+	Object * sender() const { return sender_; }
+
+	MessageClear(Object * ptr)
+		: Message{Message::Type::OBJ_CLEAR}, sender_{ptr}
+	{
+	}
 };
 
 class MessageKeyboard : public Message {
