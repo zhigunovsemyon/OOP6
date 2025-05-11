@@ -46,9 +46,8 @@ void Program::input_handle_()
 
 	case SDL_MOUSEWHEEL:
 		assert(event_.wheel.y != 0);
-		(event_.wheel.y > 0) ?
-			send_msg(new MessageBuilderNext) :
-			send_msg(new MessageBuilderPrev);
+		(event_.wheel.y > 0) ? send_msg(new MessageBuilderNext)
+				     : send_msg(new MessageBuilderPrev);
 		break;
 	case SDL_MOUSEBUTTONUP:
 		if (event_.button.button == SDL_BUTTON_RIGHT)
@@ -92,8 +91,6 @@ void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 	}
 }
 
-//#include "circle.h" //ttemp
-#include "square.h"
 void Program::msg_handle_()
 {
 	if (msg_list_.empty())
@@ -113,9 +110,11 @@ void Program::msg_handle_()
 
 	switch (lastmsg.code()) {
 	case Message::Type::FACT_NEXT:
-	facc.next(); break;
+		facc.next();
+		break;
 	case Message::Type::FACT_PREV:
-	facc.prev(); break;
+		facc.prev();
+		break;
 	case Message::Type::DELME: {
 		auto * o = dynamic_cast<MessageDelete &>(lastmsg).sender();
 		obj_list_.remove(&dynamic_cast<GraphicObject &>(*o));
@@ -147,7 +146,7 @@ void Program::msg_handle_()
 /*Диспетчер программы*/
 Program & Program::run()
 {
-	while (runs_) { 
+	while (runs_) {
 		/*Создание сообщений из событий ввода*/
 		while (SDL_PollEvent(&event_))
 			input_handle_();
@@ -166,7 +165,7 @@ Program & Program::run()
 			[&rend_link](auto const o) { o->draw(rend_link); });
 
 		// Вывод на экран
-		SDL_RenderPresent(rend_); 
+		SDL_RenderPresent(rend_);
 	}
 	return *this;
 }
@@ -174,6 +173,9 @@ Program & Program::run()
 /*Завершение работы программы*/
 Program::~Program()
 {
+	std::for_each(builders_.begin(), builders_.end(),
+		      [](auto * p) { delete p; });
+	
 	std::for_each(obj_list_.begin(), obj_list_.end(),
 		      [](auto * p) { delete p; });
 

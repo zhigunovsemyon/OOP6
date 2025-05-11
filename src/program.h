@@ -33,6 +33,7 @@
 
 #include "circle.h"
 #include "square.h"
+#include "graphic_factory.h"
 
 class Program {
 private:
@@ -50,36 +51,8 @@ private:
 	static constexpr int FontSize_{16};
 	static constexpr SDL_Colour TextCol_{0xFF, 0x00, 0x00, 0xFF};
 
-	class Factory {
-		std::array<GraphicBuilder *, 2> b_;
-		int i{0};
-
-	public:
-		Factory()
-			: b_{new CircleBuilder{}, new SquareBuilder{}}
-		{
-		}
-
-		~Factory()
-		{
-			std::for_each(b_.begin(), b_.end(),
-				      [](auto * b) { delete b; });
-		}
-
-		void make(int x, int y) { b_[i]->create(x, y); };
-
-		void prev()
-		{
-			if (--i < 0)
-				i = (int)b_.size() - 1;
-		}
-
-		void next()
-		{
-			if (++i >= (int)b_.size())
-				i = 0;
-		}
-	} facc;
+	std::array<GraphicBuilder *, 2> builders_ {new CircleBuilder, new SquareBuilder};
+	GraphicFactory facc {builders_};
 
 	TTF_Font * font_{};
 	SDL_Window * win_{};
