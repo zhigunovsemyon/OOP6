@@ -47,7 +47,7 @@ static int DrawCircle(SDL_Renderer * rend,
 	return 0;
 }
 
-void Circle::bigger_() noexcept
+void CircleBase::bigger_() noexcept
 {
 	constexpr auto maxsize =
 		std::min(Program::winsize().y, Program::winsize().x) - step;
@@ -56,20 +56,20 @@ void Circle::bigger_() noexcept
 		radius_ += step;
 }
 
-void Circle::smaller_() noexcept
+void CircleBase::smaller_() noexcept
 {
 	if (radius_ > step * 2)
 		radius_ -= step;
 }
 
-void Circle::draw(SDL_Renderer * rend) const
+void CircleBase::draw(SDL_Renderer * rend) const
 {
 	SDL_Colour const * used_col = &((selected_) ? sel_colour : def_colour);
 	if (DrawCircle(rend, radius_, pos_, used_col, polycount_))
 		throw SDL_exception{};
 }
 
-bool Circle::covers_(SDL_Point const & point) const noexcept
+bool CircleBase::covers_(SDL_Point const & point) const noexcept
 {
 	/*Не входит в ширину круга*/
 	if (point.x > pos_.x + radius_ || point.x < pos_.x - radius_)

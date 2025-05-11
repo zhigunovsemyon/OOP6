@@ -86,8 +86,8 @@ void Program::draw_text(std::string_view txt, SDL_Point const & corner)
 	}
 }
 
-#include "circle.h" //ttemp
-
+//#include "circle.h" //ttemp
+#include "square.h"
 void Program::msg_handle_()
 {
 	if (msg_list_.empty())
@@ -115,7 +115,7 @@ void Program::msg_handle_()
 	/*Если ни один из объектов не перехватил нажатие раннее:*/
 	case Message::Type::LCLICK: {
 		auto const & click_msg{dynamic_cast<MessageLClick &>(lastmsg)};
-		new Circle{click_msg.x(), click_msg.y()};
+		new Square{click_msg.x(), click_msg.y()};
 		break;
 	}
 	case Message::Type::PROG_EXIT:
