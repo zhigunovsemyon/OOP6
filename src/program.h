@@ -1,9 +1,9 @@
 #pragma once
 
+#include <forward_list>
 #include <queue>
 #include <string_view>
 #include <utility>
-#include <forward_list>
 
 #include "graphic_obj.h"
 #include "message.h"
@@ -30,17 +30,19 @@
 #endif // !SDL_video_h_
 
 class Program {
-private:	
+private:
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
 	static constexpr SDL_Point winsize_{960, 600};
 	static constexpr int frametime_{10};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
 
+	static constexpr std::string_view FontPath_{
 #ifdef WIN32
-	static constexpr std::string_view FontPath_{"..\\..\\..\\assets\\font.ttf"};
+		"..\\..\\..\\assets\\font.ttf"
 #else
-	static constexpr std::string_view FontPath_{"assets/font.ttf"};
+		"assets/font.ttf"
 #endif
+	};
 	static constexpr int FontSize_{16};
 	static constexpr SDL_Colour TextCol_{0xFF, 0x00, 0x00, 0xFF};
 
@@ -84,4 +86,7 @@ public:
 
 	/*Геттер/конструктор объекта программы*/
 	static Program & get();
+
+	/*Размер окна*/
+	static constexpr SDL_Point const & winsize() { return winsize_; };
 };

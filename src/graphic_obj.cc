@@ -1,12 +1,29 @@
 #include "graphic_obj.h"
+#include "program.h"
 
-void GraphicObject::left_(){ pos_.x -= step; }
+void GraphicObject::left_()
+{
+	if (pos_.x > 0)
+		pos_.x -= step;
+}
 
-void GraphicObject::right_() { pos_.x += step; }
+void GraphicObject::right_()
+{
+	if (pos_.x < Program::winsize().x)
+		pos_.x += step;
+}
 
-void GraphicObject::down_(){ pos_.y += step; }
+void GraphicObject::down_()
+{
+	if (pos_.y < Program::winsize().y)
+		pos_.y += step;
+}
 
-void GraphicObject::up_(){ pos_.y -= step; }
+void GraphicObject::up_()
+{
+	if (pos_.y > 0)
+		pos_.y -= step;
+}
 
 void GraphicObject::recieve_msg(Message * msg)
 {
