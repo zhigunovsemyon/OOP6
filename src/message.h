@@ -18,6 +18,8 @@ public:
 		ADDME,	   /*Добавление нового объекта*/
 		DELME,	   /*Удаление объекта*/
 		PROG_EXIT, /*Завершение работы*/
+		FACT_NEXT, /*Следующая фабрика*/
+		FACT_PREV, /*Предыдущая фабрика*/
 	};
 
 	virtual ~Message() = default;
@@ -76,6 +78,16 @@ public:
 class MessageExit : public Message {
 public:
 	MessageExit() : Message{Message::Type::PROG_EXIT} {}
+};
+
+class MessageBuilderNext : public Message {
+public:
+	MessageBuilderNext() : Message{Message::Type::FACT_NEXT} {}
+};
+
+class MessageBuilderPrev : public Message {
+public:
+	MessageBuilderPrev() : Message{Message::Type::FACT_PREV} {}
 };
 
 class MessageLClick : public Message {

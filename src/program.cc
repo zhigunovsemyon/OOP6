@@ -44,6 +44,12 @@ void Program::input_handle_()
 		send_msg(new MessageKeyboard(event_.key.keysym.scancode));
 		break;
 
+	case SDL_MOUSEWHEEL:
+		assert(event_.wheel.y != 0);
+		(event_.wheel.y > 0) ?
+			send_msg(new MessageBuilderNext) :
+			send_msg(new MessageBuilderPrev);
+		break;
 	case SDL_MOUSEBUTTONUP:
 		if (event_.button.button == SDL_BUTTON_RIGHT)
 			send_msg(new MessageRClick{event_.button.x,
@@ -106,6 +112,10 @@ void Program::msg_handle_()
 		      [&lastmsg](auto * o) { o->recieve_msg(&lastmsg); });
 
 	switch (lastmsg.code()) {
+	case Message::Type::FACT_NEXT:
+	facc.next(); break;
+	case Message::Type::FACT_PREV:
+	facc.prev(); break;
 	case Message::Type::DELME: {
 		auto * o = dynamic_cast<MessageDelete &>(lastmsg).sender();
 		obj_list_.remove(&dynamic_cast<GraphicObject &>(*o));
@@ -115,7 +125,7 @@ void Program::msg_handle_()
 	/*Если ни один из объектов не перехватил нажатие раннее:*/
 	case Message::Type::LCLICK: {
 		auto const & click_msg{dynamic_cast<MessageLClick &>(lastmsg)};
-		SquareBuilder{}.create(click_msg.x(), click_msg.y());
+		facc.make(click_msg.x(), click_msg.y());
 		break;
 	}
 	case Message::Type::PROG_EXIT:
