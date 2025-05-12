@@ -30,7 +30,7 @@ public:
 };
 
 class RectangleBuilder : public GraphicBuilder {
-	GraphicObject * create(int x, int y) override
+	GraphicObject * create(int x, int y) const override
 	{
 		return new Rectangle(x, y);
 	}

@@ -11,7 +11,7 @@ class Square : public CircleBase {
 class SquareBuilder : public GraphicBuilder {
 public:
 	SquareBuilder() noexcept {}
-	GraphicObject * create(int x, int y) override
+	GraphicObject * create(int x, int y) const override
 	{
 		return new Square {x,y};
 	}

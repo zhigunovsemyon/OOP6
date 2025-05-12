@@ -33,7 +33,7 @@ public:
 };
 
 class TriangleBuilder : public GraphicBuilder {
-	GraphicObject * create(int x, int y) override
+	GraphicObject * create(int x, int y) const override
 	{
 		return new Triangle(x, y);
 	}

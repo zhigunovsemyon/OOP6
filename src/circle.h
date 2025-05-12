@@ -45,7 +45,7 @@ class Circle : public CircleBase {
 
 class CircleBuilder : public GraphicBuilder {
 public:
-	GraphicObject * create(int x, int y) override
+	GraphicObject * create(int x, int y) const override
 	{
 		return new Circle(x, y);
 	}

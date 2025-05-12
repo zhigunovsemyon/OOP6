@@ -2,7 +2,7 @@
 #include "graphic_obj.h"
 #include <span>
 
-class GraphicFactory {
+class GraphicFactory : public GraphicBuilder {
 	std::span<GraphicBuilder *> ext_;
 	int i;
 
@@ -14,7 +14,10 @@ public:
 
 	~GraphicFactory() = default;
 
-	void make(int x, int y) const { ext_[(size_t)i]->create(x, y); };
+	virtual GraphicObject * create(int x, int y) const override
+	{
+		return ext_[(size_t)i]->create(x, y);
+	}
 
 	void prev() noexcept
 	{

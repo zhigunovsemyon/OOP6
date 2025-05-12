@@ -63,5 +63,5 @@ public:
 class GraphicBuilder {
 public:
 	virtual ~GraphicBuilder() = default;
-	virtual GraphicObject * create(int x, int y) = 0;
+	virtual GraphicObject * create(int x, int y) const = 0;
 };
