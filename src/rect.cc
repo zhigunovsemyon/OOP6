@@ -18,8 +18,8 @@ void Rectangle::taller_() noexcept
 	constexpr auto maxsize =
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
-	if (wh_.y < maxsize - step)
-		wh_.y = (int)((float)wh_.y * mult_);
+	if ((wh_.y = (int)((float)wh_.y * mult_)) > maxsize)
+		wh_.y = maxsize;
 }
 
 void Rectangle::wider_() noexcept
