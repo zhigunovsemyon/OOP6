@@ -18,7 +18,7 @@ void Triangle::taller_() noexcept
 	constexpr auto maxsize =
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
-	if ((wh_.y = (int)(wh_.y * mult_)) > maxsize)
+	if ((wh_.y = (int)((float)wh_.y * mult_)) > maxsize)
 		wh_.y = maxsize;
 }
 
@@ -27,7 +27,7 @@ void Triangle::wider_() noexcept
 	constexpr auto maxsize =
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
-	if ((wh_.x = (int)(wh_.x * mult_)) > maxsize)
+	if ((wh_.x = (int)((float)wh_.x * mult_)) > maxsize)
 		wh_.x = maxsize;
 }
 
@@ -35,7 +35,7 @@ void Triangle::narrower_() noexcept
 {
 	constexpr auto minsize = 3 * step;
 
-	if ((wh_.x = (int)(wh_.x / mult_)) < minsize)
+	if ((wh_.x = (int)((float)wh_.x / mult_)) < minsize)
 		wh_.x = minsize;
 }
 
@@ -43,7 +43,7 @@ void Triangle::lower_() noexcept
 {
 	constexpr auto minsize = 3 * step;
 
-	if ((wh_.y = (int)(wh_.y / mult_)) < minsize)
+	if ((wh_.y = (int)((float)wh_.y / mult_)) < minsize)
 		wh_.y = minsize;
 }
 

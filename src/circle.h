@@ -12,9 +12,9 @@ public:
 
 private:
 	constexpr static int default_radius_{64};
+	int radius_;
 	int const polycount_;
 
-	int radius_;
 
 protected:
 	CircleBase(int x, int y, int pc)

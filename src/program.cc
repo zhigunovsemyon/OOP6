@@ -39,13 +39,16 @@ void Program::input_handle_()
 			send_msg(new MessageExit);
 		break;
 	case SDL_KEYUP:
+		if (event_.key.keysym.scancode == SDL_SCANCODE_TAB)
+			send_msg(new MessageBuilderNext);
+
 		if (event_.key.keysym.scancode == SDL_SCANCODE_Q)
 			send_msg(new MessageExit);
 		send_msg(new MessageKeyboard(event_.key.keysym.scancode));
 		break;
 
 	case SDL_MOUSEWHEEL:
-		assert(event_.wheel.y != 0);
+		// assert(event_.wheel.y != 0);
 		(event_.wheel.y > 0) ? send_msg(new MessageBuilderNext)
 				     : send_msg(new MessageBuilderPrev);
 		break;
@@ -79,8 +82,7 @@ static int DrawBackground_(SDL_Renderer * rend, SDL_Colour const * col)
 	SDL_Rect const dest_rect{corner.x, corner.y, surf->w, surf->h};
 
 	auto texture{SDL_CreateTextureFromSurface(rend_, surf)};
-	if (!texture) {
-		SDL_FreeSurface(surf);
+	if (!texture) { SDL_FreeSurface(surf);
 		throw SDL_exception{};
 	}
 
@@ -175,7 +177,7 @@ Program::~Program()
 {
 	std::for_each(builders_.begin(), builders_.end(),
 		      [](auto * p) { delete p; });
-	
+
 	std::for_each(obj_list_.begin(), obj_list_.end(),
 		      [](auto * p) { delete p; });
 

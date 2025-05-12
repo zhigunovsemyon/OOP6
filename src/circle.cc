@@ -81,3 +81,4 @@ bool CircleBase::covers_(SDL_Point const & point) const noexcept
 
 	return true;
 }
+

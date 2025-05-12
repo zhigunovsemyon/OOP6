@@ -19,7 +19,7 @@ void Rectangle::taller_() noexcept
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
 	if (wh_.y < maxsize - step)
-		wh_.y = (int)(wh_.y * mult_);
+		wh_.y = (int)((float)wh_.y * mult_);
 }
 
 void Rectangle::wider_() noexcept
@@ -28,14 +28,14 @@ void Rectangle::wider_() noexcept
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
 	if (wh_.x < maxsize - step)
-		wh_.x = (int)(wh_.x * mult_);
+		wh_.x = (int)((float)wh_.x * mult_);
 }
 
 void Rectangle::narrower_() noexcept
 {
 	constexpr auto minsize = 3 * step;
 
-	if ((wh_.x = (int)(wh_.x / mult_)) < minsize)
+	if ((wh_.x = (int)((float)wh_.x / mult_)) < minsize)
 		wh_.x = minsize;
 }
 
@@ -43,7 +43,7 @@ void Rectangle::lower_() noexcept
 {
 	constexpr auto minsize = 3 * step;
 
-	if ((wh_.y = (int)(wh_.y / mult_)) < minsize)
+	if ((wh_.y = (int)((float)wh_.y / mult_)) < minsize)
 		wh_.y = minsize;
 }
 
