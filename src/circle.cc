@@ -24,19 +24,19 @@ static int DrawCircle(SDL_Renderer * rend,
 		//(i / кол-во полигонов) и (1+i / кол-во полигонов)
 		verts[1].position.x =
 			(float)centre.x +
-			(float)rad * SDL_cosf(2 * (float)M_PI * (float)(i + 1) /
+			(float)rad * SDL_cosf(2 * M_PIf * (float)(i + 1) /
 					      (float)circle_presicion);
 		verts[1].position.y =
 			(float)centre.y -
-			(float)rad * SDL_sinf(2 * (float)M_PI * (float)(i + 1) /
+			(float)rad * SDL_sinf(2 * M_PIf * (float)(i + 1) /
 					      (float)circle_presicion);
 		verts[2].position.x =
 			(float)centre.x +
-			(float)rad * SDL_cosf(2 * (float)M_PI * (float)i /
+			(float)rad * SDL_cosf(2 * M_PIf * (float)i /
 					      (float)circle_presicion);
 		verts[2].position.y =
 			(float)centre.y -
-			(float)rad * SDL_sinf(2 * (float)M_PI * (float)i /
+			(float)rad * SDL_sinf(2 * M_PIf * (float)i /
 					      (float)circle_presicion);
 
 		// Рисование каждого полигона, возврат кода ошибки при её
@@ -64,21 +64,22 @@ void CircleBase::smaller_() noexcept
 
 void CircleBase::draw(SDL_Renderer * rend) const
 {
-	auto const used_col {cur_colour()};
+	auto const used_col{cur_colour()};
 	if (DrawCircle(rend, radius_, pos_, &used_col, polycount_))
 		throw SDL_exception{};
 }
 
 bool CircleBase::covers_(SDL_Point const & point) const noexcept
 {
-	/*Не входит в ширину круга*/
-	if (point.x > pos_.x + radius_ || point.x < pos_.x - radius_)
+	bool const to_the_right = point.x > pos_.x + radius_;
+	bool const to_the_left = point.x < pos_.x - radius_;
+	if (to_the_right || to_the_left)
 		return false;
 
-	/*Не входит в высоту круга*/
-	if (point.y > pos_.y + radius_ || point.y < pos_.y - radius_)
+	bool const above = point.y < pos_.y - radius_;
+	bool const below = point.y > pos_.y + radius_;
+	if (above || below)
 		return false;
 
 	return true;
 }
-
