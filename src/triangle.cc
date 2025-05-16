@@ -4,10 +4,14 @@
 
 bool Triangle::covers_(SDL_Point const & point) const noexcept
 {
-	if (point.x > pos_.x + wh_.x / 2 || point.x < pos_.x - wh_.x / 2)
+	bool const to_the_right = point.x > pos_.x + wh_.x / 2;
+	bool const to_the_left = point.x < pos_.x - wh_.x / 2;
+	if (to_the_right || to_the_left)
 		return false;
 
-	if (point.y > pos_.y + wh_.y / 2 || point.y < pos_.y - wh_.y / 2)
+	bool const above = point.y < pos_.y - wh_.y / 2;
+	bool const below = point.y > pos_.y + wh_.y / 2;
+	if (above || below)
 		return false;
 
 	return true;
@@ -18,7 +22,8 @@ void Triangle::taller_() noexcept
 	constexpr auto maxsize =
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
-	if ((wh_.y = (int)((float)wh_.y * mult_)) > maxsize)
+	wh_.y = (int)((float)wh_.y * mult_);
+	if (wh_.y > maxsize)
 		wh_.y = maxsize;
 }
 
@@ -27,7 +32,8 @@ void Triangle::wider_() noexcept
 	constexpr auto maxsize =
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
-	if ((wh_.x = (int)((float)wh_.x * mult_)) > maxsize)
+	wh_.x = (int)((float)wh_.x * mult_);
+	if (wh_.x < maxsize)
 		wh_.x = maxsize;
 }
 
@@ -35,7 +41,8 @@ void Triangle::narrower_() noexcept
 {
 	constexpr auto minsize = 3 * step;
 
-	if ((wh_.x = (int)((float)wh_.x / mult_)) < minsize)
+	wh_.x = (int)((float)wh_.x / mult_);
+	if (wh_.x < minsize)
 		wh_.x = minsize;
 }
 
@@ -43,7 +50,8 @@ void Triangle::lower_() noexcept
 {
 	constexpr auto minsize = 3 * step;
 
-	if ((wh_.y = (int)((float)wh_.y / mult_)) < minsize)
+	wh_.y = (int)((float)wh_.y / mult_);
+	if (wh_.y < minsize)
 		wh_.y = minsize;
 }
 
@@ -55,12 +63,14 @@ void Triangle::draw(SDL_Renderer * rend) const
 	verts[0].tex_coord = verts[1].tex_coord = verts[2].tex_coord =
 		SDL_FPoint{0.0f, 0.0f};
 
-	verts[0].position =
-		SDL_FPoint{(float)(pos_.x - wh_.x / 2), (float)(pos_.y + wh_.y / 2)};
-	verts[1].position =
-		SDL_FPoint{(float)(pos_.x + wh_.x / 2), (float)(pos_.y + wh_.y / 2)};
-	verts[2].position =
-		SDL_FPoint{(float)(pos_.x), (float)(pos_.y - wh_.y / 2)};
+	float const leftmost_line{(float)(pos_.x - wh_.x / 2)};
+	float const rightmost_line{leftmost_line + wh_.x};
+	float const north_line{(float)(pos_.y - wh_.y / 2)};
+	float const south_line{north_line + wh_.y};
+
+	verts[0].position = SDL_FPoint{leftmost_line, south_line};
+	verts[1].position = SDL_FPoint{rightmost_line, south_line};
+	verts[2].position = SDL_FPoint{(float)pos_.x, north_line};
 
 	if (SDL_RenderGeometry(rend, NULL, verts, 3, NULL, 0))
 		throw SDL_exception{};
