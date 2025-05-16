@@ -29,9 +29,9 @@ void GraphicObject::recieve_msg(Message * msg)
 {
 	switch (msg->code()) {
 	case Message::Type::KB_HIT: {
-		auto const & kb_msg{dynamic_cast<MessageKeyboard &>(*msg)};
 		if (!selected_)
-			break;
+			return;
+		auto const & kb_msg{dynamic_cast<MessageKeyboard &>(*msg)};
 		switch (kb_msg.kbcode()) {
 		case SDL_SCANCODE_UP:
 			up_();
@@ -75,7 +75,8 @@ void GraphicObject::recieve_msg(Message * msg)
 	}
 	case Message::Type::LCLICK: {
 		auto const & click_msg{dynamic_cast<MessageLClick &>(*msg)};
-		if (covers_({click_msg.x(), click_msg.y()})) {
+		SDL_Point const click_point{click_msg.x(), click_msg.y()};
+		if (covers_(click_point)) {
 			selected_ = !selected_;
 			send_msg(new MessageClear{this});
 			msg->clear();
@@ -84,7 +85,8 @@ void GraphicObject::recieve_msg(Message * msg)
 	}
 	case Message::Type::RCLICK: {
 		auto const & click_msg{dynamic_cast<MessageRClick &>(*msg)};
-		if (covers_({click_msg.x(), click_msg.y()})) {
+		SDL_Point const click_point{click_msg.x(), click_msg.y()};
+		if (covers_(click_point)) {
 			send_msg(new MessageDelete{this});
 			msg->clear();
 		}
