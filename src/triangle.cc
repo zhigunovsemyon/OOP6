@@ -33,7 +33,7 @@ void Triangle::wider_() noexcept
 		std::min(Program::winsize().y, Program::winsize().x) - step;
 
 	wh_.x = (int)((float)wh_.x * mult_);
-	if (wh_.x < maxsize)
+	if (wh_.x > maxsize)
 		wh_.x = maxsize;
 }
 
