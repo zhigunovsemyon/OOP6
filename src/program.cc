@@ -107,8 +107,10 @@ void Program::msg_handle_()
 	msg_list_.pop();
 
 	/*Рассылка сообщения по объектам*/
-	std::for_each(obj_list_.begin(), obj_list_.end(),
-		      [&lastmsg](auto * o) { o->recieve_msg(&lastmsg); });
+	auto obj_handle_msg = [&lastmsg](auto * o) {
+		o->recieve_msg(&lastmsg);
+	};
+	std::ranges::for_each(obj_list_, obj_handle_msg);
 
 	switch (lastmsg.code()) {
 	case Message::Type::FACT_NEXT:
@@ -133,9 +135,9 @@ void Program::msg_handle_()
 		runs_ = false;
 		break;
 	case Message::Type::ADDME: {
-		auto const & spawn_msg{dynamic_cast<MessageSpawn &>(lastmsg)};
-		obj_list_.push_front(
-			dynamic_cast<GraphicObject *>(spawn_msg.sender()));
+		auto const & spawnmsg{dynamic_cast<MessageSpawn &>(lastmsg)};
+		auto newobj = dynamic_cast<GraphicObject *>(spawnmsg.sender());
+		obj_list_.push_front(newobj);
 		break;
 	}
 	default:
@@ -162,9 +164,10 @@ Program & Program::run()
 
 		/*Отрисовка каждого объекта*/
 		auto rend_link = rend_;
-		std::for_each(
-			obj_list_.begin(), obj_list_.end(),
-			[&rend_link](auto const o) { o->draw(rend_link); });
+		auto draw = [&rend_link](auto const * o) {
+			o->draw(rend_link);
+		};
+		std::ranges::for_each(obj_list_, draw );
 
 		// Вывод на экран
 		SDL_RenderPresent(rend_);
@@ -175,11 +178,9 @@ Program & Program::run()
 /*Завершение работы программы*/
 Program::~Program()
 {
-	std::for_each(builders_.begin(), builders_.end(),
-		      [](auto * p) { delete p; });
+	std::ranges::for_each(builders_, [](auto * p) { delete p; });
 
-	std::for_each(obj_list_.begin(), obj_list_.end(),
-		      [](auto * p) { delete p; });
+	std::ranges::for_each(obj_list_, [](auto * p) { delete p; });
 
 	/*Очистка остальной очереди сообщений*/
 	while (!msg_list_.empty()) {
