@@ -16,11 +16,6 @@
 #include <SDL2/SDL_events.h>
 #endif // !SDL_events_h
 
-#include <SDL_ttf.h>
-#ifndef SDL_TTF_H_
-#include <SDL2/SDL_ttf.h>
-#endif // !SDL_TTF_H_
-//
 #include <SDL_render.h>
 #ifndef SDL_render_h_
 #include <SDL2/SDL_render.h>
@@ -43,21 +38,10 @@ private:
 	static constexpr SDL_Point winsize_{960, 600};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
 
-	static constexpr std::string_view FontPath_{
-#ifdef WIN32
-		"..\\..\\..\\assets\\font.ttf"
-#else
-		"assets/font.ttf"
-#endif
-	};
-	static constexpr int FontSize_{16};
-	static constexpr SDL_Colour TextCol_{0xFF, 0x00, 0x00, 0xFF};
-
 	std::array<GraphicBuilder *, 4> builders_{
 		new CircleBuilder, new SquareBuilder, new RectangleBuilder, new TriangleBuilder};
 	GraphicFactory facc{builders_};
 
-	TTF_Font * font_{};
 	SDL_Window * win_{};
 	SDL_Renderer * rend_{};
 	SDL_Event event_{};
@@ -77,8 +61,6 @@ private:
 	void msg_handle_();
 
 	~Program(); /*Деструктор программы*/
-
-	// void draw_text(std::string_view, SDL_Point const & corner);
 
 	bool runs_{true};
 

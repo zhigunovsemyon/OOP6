@@ -18,11 +18,6 @@
 #include <SDL2/SDL_render.h>
 #endif // !SDL_render_h_
 
-#include <SDL_ttf.h>
-#ifndef SDL_TTF_H_
-#include <SDL2/SDL_ttf.h>
-#endif // !SDL_h_
-
 #include <SDL_surface.h>
 #ifndef SDL_surface_h_
 #include <SDL2/SDL_surface.h>
@@ -73,25 +68,6 @@ static int DrawBackground_(SDL_Renderer * rend, SDL_Colour const * col)
 	/*else*/
 	return 0;
 }
-
-/*void Program::draw_text(std::string_view txt, SDL_Point const & corner)
-{
-	auto surf{TTF_RenderUTF8_LCD(font_, txt.data(), TextCol_, bgcolour_)};
-	if (!surf)
-		throw TTF_exception{};
-	SDL_Rect const dest_rect{corner.x, corner.y, surf->w, surf->h};
-
-	auto texture{SDL_CreateTextureFromSurface(rend_, surf)};
-	if (!texture) { SDL_FreeSurface(surf);
-		throw SDL_exception{};
-	}
-
-	if (SDL_RenderCopy(rend_, texture, NULL, &dest_rect)) {
-		SDL_DestroyTexture(texture);
-		SDL_FreeSurface(surf);
-		throw SDL_exception{};
-	}
-}*/
 
 void Program::msg_handle_()
 {
@@ -189,16 +165,12 @@ Program::~Program()
 		msg_list_.pop();
 	}
 
-	if (font_)
-		TTF_CloseFont(font_);
-
 	if (rend_)
 		SDL_DestroyRenderer(rend_);
 
 	if (win_)
 		SDL_DestroyWindow(win_);
 
-	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -212,19 +184,12 @@ Program::Program()
 	if (SDL_Init(SDL_INIT_VIDEO))
 		throw SDL_exception{};
 
-	/*Запуск SDL_ttf*/
-	if (TTF_Init()) {
-		SDL_Quit();
-		throw TTF_exception{};
-	}
-
 	win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
 				SDL_WINDOW_SHOWN);
 	if (win_ == nullptr) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
-		TTF_Quit();
 		SDL_Quit();
 		throw SDL_exception{str};
 	}
@@ -235,20 +200,8 @@ Program::Program()
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
 		SDL_DestroyWindow(win_);
-		TTF_Quit();
 		SDL_Quit();
 		throw SDL_exception{str};
-	}
-
-	font_ = TTF_OpenFont(FontPath_.data(), FontSize_);
-	if (font_ == nullptr) {
-		/*Сохранение строки для передачи в исключение.*/
-		auto str = SDL_GetError();
-		SDL_DestroyRenderer(rend_);
-		SDL_DestroyWindow(win_);
-		TTF_Quit();
-		SDL_Quit();
-		throw TTF_exception{str};
 	}
 }
 
