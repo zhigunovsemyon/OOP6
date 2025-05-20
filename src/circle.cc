@@ -2,6 +2,8 @@
 #include "program.h"
 #include "sdlexcept.h"
 
+#define M_PIf ((float)(M_PI))
+
 /*Рисование круга рисовальщиком rend, радиуса rad, c центром в pos, цвета col,
 с числом полигонов circle_presicion Возвращает 0 при штатной работе, либо 1*/
 static int DrawCircle(SDL_Renderer * rend,
