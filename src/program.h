@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SDL2/SDL.h>
 #include <algorithm>
 #include <array>
 #include <cstdint>
@@ -36,17 +35,10 @@
 #include "square.h"
 #include "triangle.h"
 
-class SDL_InitedProgram {
-	static constexpr uint32_t flags_ = SDL_INIT_VIDEO;
+struct SDL_InitedProgram {
+	SDL_InitedProgram();
 
-public:
-	SDL_InitedProgram()
-	{
-		if (SDL_Init(flags_))
-			throw SDL_exception();
-	}
-
-	~SDL_InitedProgram() { SDL_Quit(); }
+	~SDL_InitedProgram();
 
 	SDL_InitedProgram(SDL_InitedProgram const &) = delete;
 	SDL_InitedProgram(SDL_InitedProgram &&) = delete;
@@ -55,25 +47,25 @@ public:
 	auto operator=(SDL_InitedProgram &&) -> SDL_InitedProgram & = delete;
 };
 
+struct SDL_WindowDeleter {
+	void operator()(SDL_Window * ptr) const noexcept
+	{
+		SDL_DestroyWindow(ptr);
+	}
+};
+
+struct SDL_RendererDeleter {
+	void operator()(SDL_Renderer * ptr) const noexcept
+	{
+		SDL_DestroyRenderer(ptr);
+	}
+};
+
 class Program : SDL_InitedProgram {
 private:
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
 	static constexpr SDL_Point winsize_{960, 600};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
-
-	struct SDL_WindowDeleter {
-		void operator()(SDL_Window* ptr) const noexcept
-		{
-			SDL_DestroyWindow(ptr);
-		}
-	};
-
-	struct SDL_RendererDeleter {
-		void operator()(SDL_Renderer* ptr) const noexcept
-		{
-			SDL_DestroyRenderer(ptr);
-		}
-	};
 
 	CircleBuilder b1{};
 	SquareBuilder b2{};
