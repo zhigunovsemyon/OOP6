@@ -1,8 +1,11 @@
 #pragma once
 
+#include <SDL2/SDL.h>
 #include <algorithm>
 #include <array>
+#include <cstdint>
 #include <forward_list>
+#include <memory>
 #include <queue>
 #include <string_view>
 #include <utility>
@@ -10,6 +13,7 @@
 #include "graphic_obj.h"
 #include "message.h"
 #include "obj.h"
+#include "sdlexcept.h"
 
 #include <SDL_events.h>
 #ifndef SDL_events_h_
@@ -29,21 +33,57 @@
 #include "circle.h"
 #include "graphic_factory.h"
 #include "rect.h"
-#include "triangle.h"
 #include "square.h"
+#include "triangle.h"
 
-class Program {
+class SDL_InitedProgram {
+	static constexpr uint32_t flags_ = SDL_INIT_VIDEO;
+
+public:
+	SDL_InitedProgram()
+	{
+		if (SDL_Init(flags_))
+			throw SDL_exception();
+	}
+
+	~SDL_InitedProgram() { SDL_Quit(); }
+
+	SDL_InitedProgram(SDL_InitedProgram const &) = delete;
+	SDL_InitedProgram(SDL_InitedProgram &&) = delete;
+	auto operator=(SDL_InitedProgram const &)
+		-> SDL_InitedProgram & = delete;
+	auto operator=(SDL_InitedProgram &&) -> SDL_InitedProgram & = delete;
+};
+
+class Program : SDL_InitedProgram {
 private:
 	static constexpr SDL_Colour bgcolour_{0x70, 0x70, 0x70, 0xFF};
 	static constexpr SDL_Point winsize_{960, 600};
 	static constexpr std::string_view WinName_{"Лабораторная работа №6"};
 
-	std::array<GraphicBuilder *, 4> builders_{
-		new CircleBuilder, new SquareBuilder, new RectangleBuilder, new TriangleBuilder};
+	struct SDL_WindowDeleter {
+		void operator()(SDL_Window* ptr) const noexcept
+		{
+			SDL_DestroyWindow(ptr);
+		}
+	};
+
+	struct SDL_RendererDeleter {
+		void operator()(SDL_Renderer* ptr) const noexcept
+		{
+			SDL_DestroyRenderer(ptr);
+		}
+	};
+
+	CircleBuilder b1{};
+	SquareBuilder b2{};
+	RectangleBuilder b3{};
+	TriangleBuilder b4{};
+	std::array<GraphicBuilder *, 4> builders_{&b1, &b2, &b3, &b4};
 	GraphicFactory facc{builders_};
 
-	SDL_Window * win_{};
-	SDL_Renderer * rend_{};
+	std::unique_ptr<SDL_Window, SDL_WindowDeleter> win_{};
+	std::unique_ptr<SDL_Renderer, SDL_RendererDeleter> rend_{};
 	SDL_Event event_{};
 
 	/*Очередь сообщений*/

@@ -135,18 +135,18 @@ Program & Program::run()
 		msg_handle_();
 
 		// Заливка фона, завершение работы если не удалось
-		if (DrawBackground_(rend_, &bgcolour_))
+		if (DrawBackground_(rend_.get(), &bgcolour_))
 			throw SDL_exception{};
 
 		/*Отрисовка каждого объекта*/
-		auto rend_link = rend_;
+		auto rend_link = rend_.get();
 		auto draw = [&rend_link](auto const * o) {
 			o->draw(rend_link);
 		};
-		std::ranges::for_each(obj_list_, draw );
+		std::ranges::for_each(obj_list_, draw);
 
 		// Вывод на экран
-		SDL_RenderPresent(rend_);
+		SDL_RenderPresent(rend_.get());
 	}
 	return *this;
 }
@@ -154,7 +154,7 @@ Program & Program::run()
 /*Завершение работы программы*/
 Program::~Program()
 {
-	std::ranges::for_each(builders_, [](auto * p) { delete p; });
+	// std::ranges::for_each(builders_, [](auto * p) { delete p; });
 
 	std::ranges::for_each(obj_list_, [](auto * p) { delete p; });
 
@@ -165,42 +165,47 @@ Program::~Program()
 		msg_list_.pop();
 	}
 
-	if (rend_)
-		SDL_DestroyRenderer(rend_);
+	// if (rend_)
+	// 	SDL_DestroyRenderer(rend_);
+	//
+	// if (win_)
+	// 	SDL_DestroyWindow(win_);
 
-	if (win_)
-		SDL_DestroyWindow(win_);
-
-	SDL_Quit();
+	// SDL_Quit();
 }
 
 /*Запуск программы*/
 Program::Program()
+	: win_{SDL_CreateWindow(WinName_.data(),
+				SDL_WINDOWPOS_UNDEFINED,
+				SDL_WINDOWPOS_UNDEFINED,
+				winsize_.x,
+				winsize_.y,
+				SDL_WINDOW_SHOWN)},
+	  rend_{SDL_CreateRenderer(win_.get(),
+				   -1,
+				   SDL_RENDERER_ACCELERATED |
+					   SDL_RENDERER_PRESENTVSYNC)}
 {
 	/*При неудаче очистка осуществляется сразу в конструкторе,
 	т.к. объект не будет создан и не будет вызвано деструктора*/
 
 	/*Запуск SDL*/
-	if (SDL_Init(SDL_INIT_VIDEO))
-		throw SDL_exception{};
+	// if (SDL_Init(SDL_INIT_VIDEO))
+	// 	throw SDL_exception{};
 
-	win_ = SDL_CreateWindow(WinName_.data(), SDL_WINDOWPOS_UNDEFINED,
-				SDL_WINDOWPOS_UNDEFINED, winsize_.x, winsize_.y,
-				SDL_WINDOW_SHOWN);
 	if (win_ == nullptr) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
-		SDL_Quit();
+		// SDL_Quit();
 		throw SDL_exception{str};
 	}
 
-	rend_ = SDL_CreateRenderer(
-		win_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (nullptr == rend_) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
-		SDL_DestroyWindow(win_);
-		SDL_Quit();
+		SDL_DestroyWindow(win_.get());
+		// SDL_Quit();
 		throw SDL_exception{str};
 	}
 }
