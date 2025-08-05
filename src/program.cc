@@ -93,14 +93,14 @@ void Program::msg_handle_()
 		facc.prev();
 		break;
 	case Message::Type::DELME: {
-		auto * o = dynamic_cast<MessageDelete &>(lastmsg).sender();
-		obj_list_.remove(&dynamic_cast<GraphicObject &>(*o));
+		auto * o = static_cast<MessageDelete &>(lastmsg).sender();
+		obj_list_.remove(&static_cast<GraphicObject &>(*o));
 		delete o;
 		break;
 	}
 	/*Если ни один из объектов не перехватил нажатие раннее:*/
 	case Message::Type::LCLICK: {
-		auto const & click_msg{dynamic_cast<MessageLClick &>(lastmsg)};
+		auto const & click_msg{static_cast<MessageLClick &>(lastmsg)};
 		facc.create(click_msg.x(), click_msg.y());
 		break;
 	}
@@ -108,8 +108,8 @@ void Program::msg_handle_()
 		runs_ = false;
 		break;
 	case Message::Type::ADDME: {
-		auto const & spawnmsg{dynamic_cast<MessageSpawn &>(lastmsg)};
-		auto newobj = dynamic_cast<GraphicObject *>(spawnmsg.sender());
+		auto const & spawnmsg{static_cast<MessageSpawn &>(lastmsg)};
+		auto newobj = static_cast<GraphicObject *>(spawnmsg.sender());
 		obj_list_.push_front(newobj);
 		break;
 	}
