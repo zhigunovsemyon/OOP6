@@ -1,6 +1,4 @@
-#include <algorithm>
 #include <cassert>
-#include <memory>
 #include <stdexcept>
 
 #include "graphic_obj.h"
@@ -43,7 +41,6 @@ void Program::input_handle_()
 		break;
 
 	case SDL_MOUSEWHEEL:
-		// assert(event_.wheel.y != 0);
 		(event_.wheel.y > 0) ? send_msg(new MessageBuilderNext)
 				     : send_msg(new MessageBuilderPrev);
 		break;
@@ -154,8 +151,6 @@ Program & Program::run()
 /*Завершение работы программы*/
 Program::~Program()
 {
-	// std::ranges::for_each(builders_, [](auto * p) { delete p; });
-
 	std::ranges::for_each(obj_list_, [](auto * p) { delete p; });
 
 	/*Очистка остальной очереди сообщений*/
@@ -164,14 +159,6 @@ Program::~Program()
 		delete top;
 		msg_list_.pop();
 	}
-
-	// if (rend_)
-	// 	SDL_DestroyRenderer(rend_);
-	//
-	// if (win_)
-	// 	SDL_DestroyWindow(win_);
-
-	// SDL_Quit();
 }
 
 /*Запуск программы*/
@@ -187,25 +174,15 @@ Program::Program()
 				   SDL_RENDERER_ACCELERATED |
 					   SDL_RENDERER_PRESENTVSYNC)}
 {
-	/*При неудаче очистка осуществляется сразу в конструкторе,
-	т.к. объект не будет создан и не будет вызвано деструктора*/
-
-	/*Запуск SDL*/
-	// if (SDL_Init(SDL_INIT_VIDEO))
-	// 	throw SDL_exception{};
-
 	if (win_ == nullptr) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
-		// SDL_Quit();
 		throw SDL_exception{str};
 	}
 
 	if (nullptr == rend_) {
 		/*Сохранение строки для передачи в исключение.*/
 		auto str = SDL_GetError();
-		SDL_DestroyWindow(win_.get());
-		// SDL_Quit();
 		throw SDL_exception{str};
 	}
 }
@@ -217,4 +194,16 @@ Program & Program::get()
 	/*Создаётся при первом вызове. Живёт всю программу*/
 	static Program inst_;
 	return inst_;
+}
+
+SDL_InitedProgram::SDL_InitedProgram()
+{
+	static constexpr uint32_t flags_ = SDL_INIT_VIDEO;
+	if (SDL_Init(flags_))
+		throw SDL_exception();
+}
+
+SDL_InitedProgram::~SDL_InitedProgram()
+{
+	SDL_Quit();
 }
