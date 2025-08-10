@@ -31,10 +31,7 @@ public:
 protected:
 	Message(Message::Type code) noexcept : code_{code} {}
 
-	Message(Message && ot) noexcept : code_{ot.code_}
-	{
-		ot.code_ = Message::Type::NIL;
-	}
+	Message(Message && ot) noexcept : code_{ot.code_} { ot.code_ = Message::Type::NIL; }
 
 	/*Код сообщения*/
 	Type code_;
@@ -42,13 +39,11 @@ protected:
 
 class MessageClear : public Message {
 	Object * sender_;
+
 public:
 	Object * sender() const { return sender_; }
 
-	MessageClear(Object * ptr)
-		: Message{Message::Type::DESELECT}, sender_{ptr}
-	{
-	}
+	MessageClear(Object * ptr) : Message{Message::Type::DESELECT}, sender_{ptr} {}
 };
 
 class MessageKeyboard : public Message {
@@ -57,10 +52,7 @@ class MessageKeyboard : public Message {
 public:
 	SDL_Scancode kbcode() const { return kbcode_; }
 
-	MessageKeyboard(SDL_Scancode c)
-		: Message{Message::Type::KB_HIT}, kbcode_(c)
-	{
-	}
+	MessageKeyboard(SDL_Scancode c) : Message{Message::Type::KB_HIT}, kbcode_(c) {}
 };
 
 class MessageSpawn : public Message {
@@ -69,10 +61,7 @@ class MessageSpawn : public Message {
 public:
 	Object * sender() const { return sender_; }
 
-	MessageSpawn(Object * ptr)
-		: Message{Message::Type::ADDME}, sender_(ptr)
-	{
-	}
+	MessageSpawn(Object * ptr) : Message{Message::Type::ADDME}, sender_(ptr) {}
 };
 
 class MessageExit : public Message {
@@ -94,10 +83,7 @@ class MessageLClick : public Message {
 	int x_, y_;
 
 public:
-	MessageLClick(int x, int y)
-		: Message{Message::Type::LCLICK}, x_{x}, y_{y}
-	{
-	}
+	MessageLClick(int x, int y) : Message{Message::Type::LCLICK}, x_{x}, y_{y} {}
 
 	int x() const { return x_; }
 
@@ -108,10 +94,7 @@ class MessageRClick : public Message {
 	int x_, y_;
 
 public:
-	MessageRClick(int x, int y)
-		: Message{Message::Type::RCLICK}, x_{x}, y_{y}
-	{
-	}
+	MessageRClick(int x, int y) : Message{Message::Type::RCLICK}, x_{x}, y_{y} {}
 
 	int x() const { return x_; }
 
@@ -124,8 +107,5 @@ class MessageDelete : public Message {
 public:
 	Object * sender() const { return sender_; }
 
-	MessageDelete(Object * ptr)
-		: Message{Message::Type::DELME}, sender_(ptr)
-	{
-	}
+	MessageDelete(Object * ptr) : Message{Message::Type::DELME}, sender_(ptr) {}
 };

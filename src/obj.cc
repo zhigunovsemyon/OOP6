@@ -1,6 +1,6 @@
-#include "program.h"
-#include "message.h"
 #include "obj.h"
+#include "message.h"
+#include "program.h"
 
 void Object::send_msg(Message * msg)
 {

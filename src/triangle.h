@@ -23,18 +23,12 @@ class Triangle : public GraphicObject {
 
 	void lower_() noexcept override;
 
-	Triangle(int x, int y)
-		: GraphicObject{x, y}, wh_{default_width_, default_height_}
-	{
-	}
+	Triangle(int x, int y) : GraphicObject{x, y}, wh_{default_width_, default_height_} {}
 
 public:
 	void draw(SDL_Renderer *) const override;
 };
 
 class TriangleBuilder : public GraphicBuilder {
-	GraphicObject * create(int x, int y) const override
-	{
-		return new Triangle(x, y);
-	}
+	GraphicObject * create(int x, int y) const override { return new Triangle(x, y); }
 };

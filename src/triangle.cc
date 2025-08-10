@@ -19,8 +19,7 @@ bool Triangle::covers_(SDL_Point const & point) const noexcept
 
 void Triangle::taller_() noexcept
 {
-	constexpr auto maxsize =
-		std::min(Program::winsize().y, Program::winsize().x) - step;
+	constexpr auto maxsize = std::min(Program::winsize().y, Program::winsize().x) - step;
 
 	wh_.y = (int)((float)wh_.y * mult_);
 	if (wh_.y > maxsize)
@@ -29,8 +28,7 @@ void Triangle::taller_() noexcept
 
 void Triangle::wider_() noexcept
 {
-	constexpr auto maxsize =
-		std::min(Program::winsize().y, Program::winsize().x) - step;
+	constexpr auto maxsize = std::min(Program::winsize().y, Program::winsize().x) - step;
 
 	wh_.x = (int)((float)wh_.x * mult_);
 	if (wh_.x > maxsize)
@@ -60,8 +58,7 @@ void Triangle::draw(SDL_Renderer * rend) const
 	SDL_Vertex verts[3]; // 3 вершины полигона
 	verts[0].color = verts[1].color = verts[2].color = cur_colour();
 
-	verts[0].tex_coord = verts[1].tex_coord = verts[2].tex_coord =
-		SDL_FPoint{0.0f, 0.0f};
+	verts[0].tex_coord = verts[1].tex_coord = verts[2].tex_coord = SDL_FPoint{0.0f, 0.0f};
 
 	float const leftmost_line{(float)(pos_.x - wh_.x / 2)};
 	float const rightmost_line{leftmost_line + wh_.x};

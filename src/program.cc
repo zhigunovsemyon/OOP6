@@ -41,16 +41,13 @@ void Program::input_handle_()
 		break;
 
 	case SDL_MOUSEWHEEL:
-		(event_.wheel.y > 0) ? send_msg(new MessageBuilderNext)
-				     : send_msg(new MessageBuilderPrev);
+		(event_.wheel.y > 0) ? send_msg(new MessageBuilderNext) : send_msg(new MessageBuilderPrev);
 		break;
 	case SDL_MOUSEBUTTONUP:
 		if (event_.button.button == SDL_BUTTON_RIGHT)
-			send_msg(new MessageRClick{event_.button.x,
-						   event_.button.y});
+			send_msg(new MessageRClick{event_.button.x, event_.button.y});
 		if (event_.button.button == SDL_BUTTON_LEFT)
-			send_msg(new MessageLClick{event_.button.x,
-						   event_.button.y});
+			send_msg(new MessageLClick{event_.button.x, event_.button.y});
 		break;
 	}
 }
@@ -58,8 +55,7 @@ void Program::input_handle_()
 /*Функция рисования фона рисовальщика rend, цветом r g b*/
 static int DrawBackground_(SDL_Renderer * rend, SDL_Colour const * col)
 {
-	if (SDL_SetRenderDrawColor(rend, col->r, col->g, col->b, col->a) ||
-	    SDL_RenderClear(rend)) {
+	if (SDL_SetRenderDrawColor(rend, col->r, col->g, col->b, col->a) || SDL_RenderClear(rend)) {
 		return 1;
 	}
 	/*else*/
@@ -80,9 +76,7 @@ void Program::msg_handle_()
 	msg_list_.pop();
 
 	/*Рассылка сообщения по объектам*/
-	auto obj_handle_msg = [&lastmsg](auto * o) {
-		o->recieve_msg(&lastmsg);
-	};
+	auto obj_handle_msg = [&lastmsg](auto * o) { o->recieve_msg(&lastmsg); };
 	std::ranges::for_each(obj_list_, obj_handle_msg);
 
 	switch (lastmsg.code()) {
@@ -137,9 +131,7 @@ Program & Program::run()
 
 		/*Отрисовка каждого объекта*/
 		auto rend_link = rend_.get();
-		auto draw = [&rend_link](auto const * o) {
-			o->draw(rend_link);
-		};
+		auto draw = [&rend_link](auto const * o) { o->draw(rend_link); };
 		std::ranges::for_each(obj_list_, draw);
 
 		// Вывод на экран
@@ -163,16 +155,15 @@ Program::~Program()
 
 /*Запуск программы*/
 Program::Program()
-	: win_{SDL_CreateWindow(WinName_.data(),
-				SDL_WINDOWPOS_UNDEFINED,
-				SDL_WINDOWPOS_UNDEFINED,
-				winsize_.x,
-				winsize_.y,
-				SDL_WINDOW_SHOWN)},
-	  rend_{SDL_CreateRenderer(win_.get(),
-				   -1,
-				   SDL_RENDERER_ACCELERATED |
-					   SDL_RENDERER_PRESENTVSYNC)}
+	: win_{SDL_CreateWindow(
+		  WinName_.data(),
+		  SDL_WINDOWPOS_UNDEFINED,
+		  SDL_WINDOWPOS_UNDEFINED,
+		  winsize_.x,
+		  winsize_.y,
+		  SDL_WINDOW_SHOWN
+	  )},
+	  rend_{SDL_CreateRenderer(win_.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}
 {
 	if (win_ == nullptr) {
 		/*Сохранение строки для передачи в исключение.*/

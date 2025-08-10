@@ -15,12 +15,8 @@ private:
 	int radius_;
 	int const polycount_;
 
-
 protected:
-	CircleBase(int x, int y, int pc)
-		: GraphicObject{x, y}, radius_{default_radius_}, polycount_{pc}
-	{
-	}
+	CircleBase(int x, int y, int pc) : GraphicObject{x, y}, radius_{default_radius_}, polycount_{pc} {}
 
 	bool covers_(SDL_Point const &) const noexcept override;
 
@@ -45,8 +41,5 @@ class Circle : public CircleBase {
 
 class CircleBuilder : public GraphicBuilder {
 public:
-	GraphicObject * create(int x, int y) const override
-	{
-		return new Circle(x, y);
-	}
+	GraphicObject * create(int x, int y) const override { return new Circle(x, y); }
 };

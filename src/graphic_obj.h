@@ -14,7 +14,7 @@
 
 class GraphicObject : public Object {
 private:
-	
+
 protected:
 	static constexpr int step{7};
 	/*Стандартный цвет объекта*/
@@ -23,7 +23,7 @@ protected:
 	static constexpr SDL_Colour sel_colour{0, 0xFF, 0, 0xFF};
 
 	/*Текущий цвет*/
-	auto  cur_colour() const noexcept {return selected_ ? sel_colour : def_colour;}
+	auto cur_colour() const noexcept { return selected_ ? sel_colour : def_colour; }
 
 	/*Координаты центра объекта*/
 	SDL_Point pos_;
@@ -31,11 +31,7 @@ protected:
 	/*Флаг выделенности объекта*/
 	bool selected_;
 
-	GraphicObject(int pos_x, int pos_y)
-		: pos_{pos_x, pos_y}, selected_{false}
-	{
-		send_msg(new MessageSpawn{this});
-	}
+	GraphicObject(int pos_x, int pos_y) : pos_{pos_x, pos_y}, selected_{false} { send_msg(new MessageSpawn{this}); }
 
 	virtual bool covers_(SDL_Point const &) const noexcept = 0;
 

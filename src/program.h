@@ -42,23 +42,16 @@ struct SDL_InitedProgram {
 
 	SDL_InitedProgram(SDL_InitedProgram const &) = delete;
 	SDL_InitedProgram(SDL_InitedProgram &&) = delete;
-	auto operator=(SDL_InitedProgram const &)
-		-> SDL_InitedProgram & = delete;
+	auto operator=(SDL_InitedProgram const &) -> SDL_InitedProgram & = delete;
 	auto operator=(SDL_InitedProgram &&) -> SDL_InitedProgram & = delete;
 };
 
 struct SDL_WindowDeleter {
-	void operator()(SDL_Window * ptr) const noexcept
-	{
-		SDL_DestroyWindow(ptr);
-	}
+	void operator()(SDL_Window * ptr) const noexcept { SDL_DestroyWindow(ptr); }
 };
 
 struct SDL_RendererDeleter {
-	void operator()(SDL_Renderer * ptr) const noexcept
-	{
-		SDL_DestroyRenderer(ptr);
-	}
+	void operator()(SDL_Renderer * ptr) const noexcept { SDL_DestroyRenderer(ptr); }
 };
 
 class Program : SDL_InitedProgram {

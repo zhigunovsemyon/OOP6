@@ -8,17 +8,12 @@
 
 /*Рисование круга рисовальщиком rend, радиуса rad, c центром в pos, цвета col,
 с числом полигонов circle_presicion Возвращает 0 при штатной работе, либо 1*/
-static int DrawCircle(SDL_Renderer * rend,
-		      int rad,
-		      SDL_Point centre,
-		      SDL_Colour const * col,
-		      int circle_presicion)
+static int DrawCircle(SDL_Renderer * rend, int rad, SDL_Point centre, SDL_Colour const * col, int circle_presicion)
 {
 	SDL_Vertex verts[3]; // 3 вершины полигона
 	verts[0].color = verts[1].color = verts[2].color = *col;
 
-	verts[0].tex_coord = verts[1].tex_coord = verts[2].tex_coord =
-		SDL_FPoint{0.0f, 0.0f};
+	verts[0].tex_coord = verts[1].tex_coord = verts[2].tex_coord = SDL_FPoint{0.0f, 0.0f};
 
 	// Определение вершины, расположенной в центре круга на всех полигонах
 	verts[0].position = SDL_FPoint{(float)centre.x, (float)centre.y};
@@ -27,21 +22,13 @@ static int DrawCircle(SDL_Renderer * rend,
 		// Определение остальных вершин полигонов, сдвинутых на углы
 		//(i / кол-во полигонов) и (1+i / кол-во полигонов)
 		verts[1].position.x =
-			(float)centre.x +
-			(float)rad * SDL_cosf(2 * M_PIf * (float)(i + 1) /
-					      (float)circle_presicion);
+			(float)centre.x + (float)rad * SDL_cosf(2 * M_PIf * (float)(i + 1) / (float)circle_presicion);
 		verts[1].position.y =
-			(float)centre.y -
-			(float)rad * SDL_sinf(2 * M_PIf * (float)(i + 1) /
-					      (float)circle_presicion);
+			(float)centre.y - (float)rad * SDL_sinf(2 * M_PIf * (float)(i + 1) / (float)circle_presicion);
 		verts[2].position.x =
-			(float)centre.x +
-			(float)rad * SDL_cosf(2 * M_PIf * (float)i /
-					      (float)circle_presicion);
+			(float)centre.x + (float)rad * SDL_cosf(2 * M_PIf * (float)i / (float)circle_presicion);
 		verts[2].position.y =
-			(float)centre.y -
-			(float)rad * SDL_sinf(2 * M_PIf * (float)i /
-					      (float)circle_presicion);
+			(float)centre.y - (float)rad * SDL_sinf(2 * M_PIf * (float)i / (float)circle_presicion);
 
 		// Рисование каждого полигона, возврат кода ошибки при её
 		// возникновении
@@ -53,8 +40,7 @@ static int DrawCircle(SDL_Renderer * rend,
 
 void CircleBase::bigger_() noexcept
 {
-	constexpr auto maxsize =
-		std::min(Program::winsize().y, Program::winsize().x) - step;
+	constexpr auto maxsize = std::min(Program::winsize().y, Program::winsize().x) - step;
 
 	if (radius_ * 2 < maxsize)
 		radius_ += step;
